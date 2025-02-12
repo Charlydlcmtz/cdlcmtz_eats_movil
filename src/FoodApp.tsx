@@ -6,6 +6,7 @@ import {StackNavigator} from './presentation/navigation/StackNavigator';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {useColorScheme} from 'react-native';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
+import { AuthProvider } from './presentation/providers/AuthProvider';
 
 export const FoodApp = () => {
   const colorScheme = useColorScheme();
@@ -29,7 +30,9 @@ export const FoodApp = () => {
             notification: theme,
           },
          }}>
-          <StackNavigator />
+          <AuthProvider>
+            <StackNavigator />
+          </AuthProvider>
         </NavigationContainer>
       </ApplicationProvider>
     </>

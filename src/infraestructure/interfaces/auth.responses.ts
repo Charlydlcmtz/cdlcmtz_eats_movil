@@ -1,13 +1,6 @@
-import { UserRole } from "./role.interface";
+import { User } from "../../domain/entities/user";
 
 export interface AuthResponse {
-    id: number;
-    username: string;
-    no_empleado: string;
-    img_user: string;
-    correo: string;
-    telefono: string;
-    id_empresa: string;
-    role: UserRole;
+    user: User;
     token: string;
 }
