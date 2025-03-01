@@ -39,6 +39,40 @@ export const authLogin = async(correo: string, password: string) => {
     }
 };
 
+export const authRegister = async(nombre: string, username: string, apellido_p: string, apellido_m: string, telefono: string, no_empleado: string, 
+    correo: string, password: string , password_confirm: string) => {
+    
+    nombre = nombre.toLocaleLowerCase();
+    username = username.toLocaleLowerCase();
+    apellido_p = apellido_p.toLocaleLowerCase();
+    apellido_m = apellido_m.toLocaleLowerCase();
+    correo = correo.toLocaleLowerCase();
+
+    try {
+
+        if (password !== password_confirm) {
+            throw new Error(`Las contraseñas no son iguales.`);
+        }
+
+        const { data } = await cdlcmtzEatsApi.post<AuthResponse>('/register', {
+            nombre,
+            username,
+            apellido_p,
+            apellido_m,
+            telefono,
+            no_empleado,
+            correo,
+            password,
+        });
+
+        // console.log(data);
+        return returnUserToken(data);
+    }catch(error){
+        console.log(error);
+        return null;
+    }
+};
+
 export const authCheckStatus = async () => {
     try {
         const { data } = await cdlcmtzEatsApi.get<AuthResponse>('/check-token');
