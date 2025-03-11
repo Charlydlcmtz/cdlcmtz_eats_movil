@@ -26,6 +26,9 @@ export const authLogin = async(correo: string, password: string) => {
 
     correo = correo.toLocaleLowerCase();
 
+    console.log(correo);
+    console.log(password);
+
     try {
         const { data } = await cdlcmtzEatsApi.post<AuthResponse>('/login', {
             correo,

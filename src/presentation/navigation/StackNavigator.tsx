@@ -12,7 +12,7 @@ export type RootStackParams = {
   RegisterScreen: undefined;
   ForgotScreen: undefined;
   HomeScreen: undefined;
-  FoodScreen: { footId: string };
+  FoodScreen: { foodId: string };
 }
 
 const Stack = createStackNavigator<RootStackParams>();
