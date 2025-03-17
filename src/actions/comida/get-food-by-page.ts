@@ -4,8 +4,6 @@ import type { TesloFood } from "../../infraestructure/interfaces/teslo-food.resp
 import { FoodMapper } from '../../infraestructure/mappers/food.mapper';
 
 export const getFoodByPage = async (page: number, limit: number = 20): Promise<Food[]> => {
-    console.log({ page, limit });
-
     try {
         const { data } = await cdlcmtzEatsApi.post<TesloFood[]>(`/menu/list-food`);
 

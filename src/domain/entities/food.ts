@@ -4,7 +4,7 @@ import { TesloPivot } from "../../infraestructure/interfaces/teslo-pivot.respons
 
 
 export interface Food {
-    id: number;
+    id: string;
     platillo: string;
     descripcion: string;
     costo: number;

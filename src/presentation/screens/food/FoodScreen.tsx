@@ -1,32 +1,45 @@
 import { MainLayout } from "../../layouts/MainLayout";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParams } from "../../navigation/StackNavigator";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getFoodById } from "../../../actions/comida/get-food-by-id";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { Button, Input, Layout } from "@ui-kitten/components";
+import {  ButtonGroup, Button, Input, Layout, useTheme, Text } from "@ui-kitten/components";
 import { FadeInImage } from "../../components/ui/FadeInImage";
 import { MyIcon } from "../../components/ui/MyIcon";
 import { Formik } from "formik";
+import { Food } from "../../../domain/entities/food";
+import { updateCreateFood } from "../../../actions/comida/update-create-food";
+import { Image } from "react-native";
 
 
 interface Props extends StackScreenProps<RootStackParams, 'FoodScreen'>{}
 
 export const FoodScreen = ({ route }:Props) => {
-  
   const foodIdRef = useRef(route.params.foodId);
-  const { foodId } = route.params;
+  const theme = useTheme();
+  const queryClient = useQueryClient();
 
   // const [cantidad, setCantidad] = useState("1");
 
   //useQuery
   const { data: food } = useQuery({
     queryKey: ['food', foodIdRef.current ],
-    queryFn: () => getFoodById(foodIdRef.current ),
+    queryFn: () => getFoodById(foodIdRef.current),
   });
 
   //useMutation
+  const mutation = useMutation({
+    mutationFn: (data: Food ) => updateCreateFood({... data, id: foodIdRef.current}),
+    onSuccess( data: Food){
+      foodIdRef.current = data.id; // creación
+      queryClient.invalidateQueries({ queryKey: ['foods', 'infinite'] });
+      queryClient.invalidateQueries({ queryKey: ['food', data.id] });
+      // queryClient.setQueryData(['food', data.id], data);
+    },
+  });
+
   if (!food) {
     return (<MainLayout title="Cargando..." />);
   }
@@ -34,7 +47,7 @@ export const FoodScreen = ({ route }:Props) => {
     return (
         <Formik
           initialValues={ food }
-          onSubmit={ values => console.log(values) }
+          onSubmit={ mutation.mutate }
         >
           {
             ({ handleChange, handleSubmit, values, errors, setFieldValue }) => (
@@ -44,15 +57,18 @@ export const FoodScreen = ({ route }:Props) => {
               >
 
                 <ScrollView style={{ flex: 1 }}>
-
                   {/* Imagenes de la comida */}
-                  <Layout>
-                    {values.img_comida && (
-                      <FadeInImage 
-                        uri={values.img_comida}
-                        style={{ width: 400, height: 300, marginHorizontal: 4 }}
-                      />
-                    )}
+                  <Layout style= {{ marginVertical: 10, justifyContent: 'center', alignItems: 'center' }}>
+                    {
+                      (values.img_comida.length === 0)
+                      ? <Image source={ require('../../../assets/no-product-image.png') } style={{ width: 400, height: 300, marginHorizontal: 4 }} />
+                      : (
+                          <FadeInImage 
+                            uri={values.img_comida}
+                            style={{ width: 400, height: 300, marginHorizontal: 4 }}
+                          />
+                      )
+                    }
                   </Layout>
 
                   {/* Formulario */}
@@ -95,9 +111,9 @@ export const FoodScreen = ({ route }:Props) => {
                   {/* Boton de guardar */}
                   <Button
                     accessoryLeft={ <MyIcon name="save-outline" white /> }
-                    onPress={ () => console.log('Guardar')}
+                    onPress={ () => handleSubmit()}
+                    disabled={mutation.isPending}
                     style={{margin: 15 }}
-
                   >
                     Guardar
                   </Button>

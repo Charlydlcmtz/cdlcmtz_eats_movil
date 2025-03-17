@@ -3,6 +3,7 @@ import { Food } from "../../../domain/entities/food";
 import { FoodCard } from "./FoodCard";
 import { useState } from "react";
 import { RefreshControl } from "react-native-gesture-handler";
+import { useQueryClient } from "@tanstack/react-query";
 
 
 
@@ -14,12 +15,12 @@ interface Props {
 
 export const FoodList = ({ foods, fetchNextPage }: Props) => {
 
+    const queryClient = useQueryClient();
     const [isRefreshing, setIsRefreshing] = useState(false);
 
     const onPullToRefresh = async() => {
         setIsRefreshing(true);
-        // Sleep 2
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        queryClient.invalidateQueries({ queryKey: ['foods', 'infinite'] });
         setIsRefreshing(false);
     }
 
