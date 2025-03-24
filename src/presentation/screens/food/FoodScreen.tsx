@@ -1,18 +1,18 @@
+import { useRef } from "react";
+import {  Button, Input, Layout, useTheme } from "@ui-kitten/components";
 import { MainLayout } from "../../layouts/MainLayout";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParams } from "../../navigation/StackNavigator";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getFoodById } from "../../../actions/comida/get-food-by-id";
-import { useRef } from "react";
+
+import { getFoodById, updateCreateFood } from "../../../actions/comida";
+
 import { ScrollView } from "react-native-gesture-handler";
-import {  ButtonGroup, Button, Input, Layout, useTheme, Text } from "@ui-kitten/components";
-import { FadeInImage } from "../../components/ui/FadeInImage";
 import { MyIcon } from "../../components/ui/MyIcon";
 import { Formik } from "formik";
 import { Food } from "../../../domain/entities/food";
-import { updateCreateFood } from "../../../actions/comida/update-create-food";
-import { Image } from "react-native";
-
+import { FoodImage } from "../../components/foods/FoodImage";
+import { CameraAdapter } from "../../../config/adapters/camera-adapter";
 
 interface Props extends StackScreenProps<RootStackParams, 'FoodScreen'>{}
 
@@ -33,7 +33,8 @@ export const FoodScreen = ({ route }:Props) => {
   const mutation = useMutation({
     mutationFn: (data: Food ) => updateCreateFood({... data, id: foodIdRef.current}),
     onSuccess( data: Food){
-      foodIdRef.current = data.id; // creación
+      const id = data?.id ?? foodIdRef.current;
+      foodIdRef.current = id; // creación
       queryClient.invalidateQueries({ queryKey: ['foods', 'infinite'] });
       queryClient.invalidateQueries({ queryKey: ['food', data.id] });
       // queryClient.setQueryData(['food', data.id], data);
@@ -54,21 +55,17 @@ export const FoodScreen = ({ route }:Props) => {
               <MainLayout
                 title={ values.platillo }
                 subTitle={ `Precio: ${values.costo}` }
+                rightAction={ async() => {
+                  const photos = await CameraAdapter.takePicture();
+                  setFieldValue('img_comida', photos);
+                }}
+                rightActionIcon="camera-outline"
               >
 
                 <ScrollView style={{ flex: 1 }}>
                   {/* Imagenes de la comida */}
                   <Layout style= {{ marginVertical: 10, justifyContent: 'center', alignItems: 'center' }}>
-                    {
-                      (values.img_comida.length === 0)
-                      ? <Image source={ require('../../../assets/no-product-image.png') } style={{ width: 400, height: 300, marginHorizontal: 4 }} />
-                      : (
-                          <FadeInImage 
-                            uri={values.img_comida}
-                            style={{ width: 400, height: 300, marginHorizontal: 4 }}
-                          />
-                      )
-                    }
+                    <FoodImage image={values.img_comida} />
                   </Layout>
 
                   {/* Formulario */}

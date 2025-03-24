@@ -8,7 +8,6 @@ export const getFoodByPage = async (page: number, limit: number = 20): Promise<F
         const { data } = await cdlcmtzEatsApi.post<TesloFood[]>(`/menu/list-food`);
 
         const foods = data.map( FoodMapper.tesloFoodToEntity );
-        console.log(foods[0]);
         return foods;
 
     } catch (error) {
