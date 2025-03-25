@@ -77,9 +77,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.cdlcmtzeatsapp"
+    namespace "com.carlosmartinez.cdlcmtzeatsapp"
     defaultConfig {
-        applicationId "com.cdlcmtzeatsapp"
+        applicationId "com.carlosmartinez.cdlcmtzeatsapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

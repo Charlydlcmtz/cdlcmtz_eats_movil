@@ -1,4 +1,4 @@
-package com.cdlcmtzeatsapp
+package com.carlosmartinez.cdlcmtzeatsapp
 
 import android.app.Application
 import com.facebook.react.PackageList

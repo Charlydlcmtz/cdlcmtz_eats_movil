@@ -1,4 +1,4 @@
-package com.cdlcmtzeatsapp
+package com.carlosmartinez.cdlcmtzeatsapp
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
