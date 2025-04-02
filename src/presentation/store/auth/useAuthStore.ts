@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { User } from "../../../domain/entities/user";
 import { AuthStatus } from "../../../infraestructure/interfaces/auth.status";
-import { authCheckStatus, authLogin, authRegister } from "../../../actions/auth/auth";
+import { authCheckStatus, authForgotPassword, authLogin, authRegister } from "../../../actions/auth/auth";
 import { StoragerAdapter } from '../../../config/adapters/storage-adapter';
 
 export interface AuthState {
@@ -10,8 +10,8 @@ export interface AuthState {
     user?: User;
 
     login: (correo: string, password: string) => Promise<boolean>;
-    register: (nombre: string, username: string, apellido_paterno: string, apellido_materno: string, telefono: string, no_empleado: string, 
-        correo: string, password: string , password_confirm: string) => Promise<boolean>;
+    register: (payload: any) => Promise<boolean>;
+    forgotPassword: (correo: string, tipo_app: string) => Promise<{ mensaje: string; estatus: string; codigo: number }>;
     checkStatus: () => Promise<void>
     logout: () => Promise<void>
 }
@@ -35,9 +35,8 @@ export const useAuthStore = create<AuthState>()( (set, get) => ({
         return true;
     },
 
-    register: async (nombre: string, username: string, apellido_paterno: string, apellido_materno: string, telefono: string, no_empleado: string, 
-        correo: string, password: string , password_confirm: string) => {
-        const resp = await authRegister(nombre, username, apellido_paterno, apellido_materno, telefono, no_empleado, correo, password, password_confirm);
+    register: async (payload: any) => {
+        const resp = await authRegister(payload);
 
         if (!resp) {
             set({ status: 'unauthenticated', token: undefined, user: undefined });
@@ -49,6 +48,17 @@ export const useAuthStore = create<AuthState>()( (set, get) => ({
 
         set({ status: 'authenticated', token: resp.token, user: resp.user });
         return true;
+    },
+
+    forgotPassword: async (correo: string, tipo_app: string): Promise<{ mensaje: string; estatus: string; codigo: number }> => {
+        const resp = await authForgotPassword(correo, tipo_app);
+        if (!resp) {
+            return { mensaje: 'Error al enviar correo',
+                estatus: 'error',
+                codigo: 400,
+            };
+        }
+        return resp;
     },
 
     checkStatus: async () => {

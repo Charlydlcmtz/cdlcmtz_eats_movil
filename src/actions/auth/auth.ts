@@ -1,10 +1,10 @@
 import { cdlcmtzEatsApi } from "../../config/api/cdlcmtzEatsApi"
 import { User } from "../../domain/entities/user";
 import type { AuthResponse } from "../../infraestructure/interfaces/auth.responses";
+import { BasicResponse } from "../../infraestructure/interfaces/basic.response";
 
 
 const returnUserToken = ( data: AuthResponse ) => {
-    
     const user: User = {
         id: data.user.id,
         username: data.user.username,
@@ -14,20 +14,24 @@ const returnUserToken = ( data: AuthResponse ) => {
         telefono: data.user.telefono,
         id_empresa: data.user.id_empresa,
         role: data.user.role,
-    }
-    
+    };
     return {
         user: user,
-        token: data.token
-    }
-}
+        token: data.token,
+    };
+};
+
+const returnBasic = ( data: BasicResponse ) => {
+    return {
+        mensaje: data.mensaje,
+        estatus: data.estatus,
+        codigo: data.codigo,
+    };
+};
 
 export const authLogin = async(correo: string, password: string) => {
 
     correo = correo.toLocaleLowerCase();
-
-    console.log(correo);
-    console.log(password);
 
     try {
         const { data } = await cdlcmtzEatsApi.post<AuthResponse>('/login', {
@@ -42,36 +46,72 @@ export const authLogin = async(correo: string, password: string) => {
     }
 };
 
-export const authRegister = async(nombre: string, username: string, apellido_p: string, apellido_m: string, telefono: string, no_empleado: string, 
-    correo: string, password: string , password_confirm: string) => {
-    
-    nombre = nombre.toLocaleLowerCase();
-    username = username.toLocaleLowerCase();
-    apellido_p = apellido_p.toLocaleLowerCase();
-    apellido_m = apellido_m.toLocaleLowerCase();
-    correo = correo.toLocaleLowerCase();
+export const authRegister = async(payload : any) => {
 
     try {
-
-        if (password !== password_confirm) {
-            throw new Error(`Las contraseñas no son iguales.`);
-        }
-
-        const { data } = await cdlcmtzEatsApi.post<AuthResponse>('/register', {
+        const {
             nombre,
             username,
             apellido_p,
             apellido_m,
             telefono,
             no_empleado,
+            rfc,
             correo,
+            img_user,
+            icon,
             password,
-        });
+            password_confirm,
+            tipo_usuario,
+        } = payload;
 
-        // console.log(data);
+        // Validación de contraseñas
+        if (password !== password_confirm) {
+            throw new Error("Las contraseñas no son iguales.");
+        }
+
+        // Seleccionar endpoint según tipo
+        const endpoint = tipo_usuario === 'empresa' ? '/register-company-movil' : '/register-movil';
+
+        const dataToSend = {
+            nombre: nombre?.toLowerCase(),
+            username: username?.toLowerCase(),
+            apellido_p: apellido_p?.toLowerCase(),
+            apellido_m: apellido_m?.toLowerCase(),
+            correo: correo?.toLowerCase(),
+            img_user,
+            icon,
+            telefono,
+            no_empleado,
+            rfc,
+            password,
+        };
+
+        const { data } = await cdlcmtzEatsApi.post<AuthResponse>(endpoint, dataToSend);
         return returnUserToken(data);
-    }catch(error){
-        console.log(error);
+
+    } catch (error) {
+        console.log("Error en authRegister:", error);
+        return null;
+    }
+};
+
+export const authForgotPassword = async(correo: string, tipo_app: string) => {
+    try {
+        if (correo === '') {
+            throw new Error("El correo no es valido.");
+        }
+
+        const dataToSend = {
+            correo: correo?.toLowerCase(),
+            tipo_app,
+        };
+
+        const { data } = await cdlcmtzEatsApi.post<BasicResponse>('/codigo', dataToSend);
+        return returnBasic(data);
+
+    } catch (error) {
+        console.log("Error en authRegister:", error);
         return null;
     }
 };

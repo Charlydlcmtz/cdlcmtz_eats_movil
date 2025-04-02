@@ -1,5 +1,5 @@
 import { Input, Layout, Text, Button } from '@ui-kitten/components';
-import { Alert, useWindowDimensions } from 'react-native';
+import { Alert, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { MyIcon } from '../../components/ui/MyIcon';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -13,6 +13,7 @@ export const LoginScreen = ({ navigation }:Props) => {
 
     const { login } = useAuthStore();
     const [isPosting, setIsPosting] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [form, setForm] = useState({
         correo: '',
         password: '',
@@ -33,6 +34,15 @@ export const LoginScreen = ({ navigation }:Props) => {
 
         Alert.alert('error', 'Usuario o contraseña incorrectos');
     }
+
+    const EyeIcon = () => (
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <MyIcon
+            name={showPassword ? 'eye-outline' : 'eye-off-outline'}
+            white
+          />
+        </TouchableOpacity>
+    );
 
     return (
        <Layout style={{ flex: 1 }}>
@@ -57,10 +67,11 @@ export const LoginScreen = ({ navigation }:Props) => {
                 <Input
                     placeholder="Contraseña"
                     autoCapitalize="none"
-                    secureTextEntry
+                    secureTextEntry={ !showPassword }
                     value={ form.password }
                     onChangeText={ (password) => setForm({ ...form, password }) }
                     accessoryLeft={ <MyIcon name='lock-outline' white /> }
+                    accessoryRight={EyeIcon}
                     style={{ marginBottom: 10 }}
                 />
             </Layout>

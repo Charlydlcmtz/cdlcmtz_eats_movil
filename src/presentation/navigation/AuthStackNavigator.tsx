@@ -2,8 +2,6 @@ import { createStackNavigator, StackCardStyleInterpolator } from '@react-navigat
 import { LoadingScreen } from '../screens/loading/LoadingScreen';
 import { LoginScreen } from '../screens/auth/LoginScreen';
 import { RegisterScreen } from '../screens/auth/RegisterScreen';
-import { HomeScreen } from '../screens/home/HomeScreen';
-import { FoodScreen } from '../screens/food/FoodScreen';
 import { ForgotScreen } from '../screens/auth/ForgotScreen';
 
 export type RootStackParams = {
@@ -26,7 +24,7 @@ const fadeAnimation: StackCardStyleInterpolator = ({ current }) => {
 }
 
 
-export const StackNavigator = () => {
+export const AuthStackNavigator = () => {
   return (
     <Stack.Navigator
       initialRouteName="LoadingScreen"
@@ -53,15 +51,6 @@ export const StackNavigator = () => {
         options={{ cardStyleInterpolator: fadeAnimation }}
         name="ForgotScreen"
         component={ForgotScreen}
-      />
-      <Stack.Screen
-        options={{ cardStyleInterpolator: fadeAnimation }}
-        name="HomeScreen"
-        component={HomeScreen}
-      />
-      <Stack.Screen
-        name="FoodScreen"
-        component={FoodScreen}
       />
     </Stack.Navigator>
   );

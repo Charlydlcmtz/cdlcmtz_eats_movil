@@ -1,18 +1,16 @@
 import { isAxiosError } from "axios";
 import { cdlcmtzEatsApi } from "../../config/api/cdlcmtzEatsApi";
-import { Food } from "../../domain/entities/food";
+import { User } from "../../domain/entities/user";
 
 
 
-export const updateCreateFood = ( food: Partial<Food> ) => {
+export const updateCreateUser = ( user: Partial<User> ) => {
 
-    food.costo = isNaN(Number(food.costo)) ? 0 : Number(food.costo);
-
-    if ( food.id && food.id !== 'new') {
-        return updateFood(food);
+    if ( user.id && user.id !== 'new') {
+        return updateUser(user);
     }
 
-    return createFood( food );
+    return createUser( user );
 
 };
 
@@ -30,33 +28,33 @@ const prepareImages = async( images: string ) => {
 //luego lo implemento
 const uploadImage = async (image: string) => {
     const formData = new FormData();
-    formData.append("img_comida_file", {
+    formData.append("img_user_file", {
         uri: image,
         type: 'image/jpeg',
         name: image.split('/').pop(),
     });
 
-    const { data } = await cdlcmtzEatsApi.post<{ image: string }>('/menu/food-file', formData, {
+    const { data } = await cdlcmtzEatsApi.post<{ img: string }>('/usuarios/user-file', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
     });
-    return data.image;
-};
+    return data.img;
+}
 
 //TODO revisar si viene el usuario
-const updateFood = async (food: Partial<Food>) => {
-    const { id, img_comida, ... rest } = food;
+const updateUser = async (user: Partial<User>) => {
+    const { id, img_user, ... rest } = user;
 
-    if (!img_comida) {
+    if (!img_user) {
         throw new Error("No se proporcionó ninguna imagen");
     }
 
     try {
-        const checkedImages = await prepareImages(img_comida);
+        const checkedImages = await prepareImages(img_user);
 
-        const { data } = await cdlcmtzEatsApi.post(`/menu/food-update-movil/${id}`, {
-            img_comida: checkedImages,
+        const { data } = await cdlcmtzEatsApi.post(`/usuarios/usuario-update-movil/${id}`, {
+            img_user: checkedImages,
             ... rest,
         });
 
@@ -72,23 +70,23 @@ const updateFood = async (food: Partial<Food>) => {
         } else {
             console.error("❌ Error inesperado:", error);
         }
-        throw new Error("Error al actualizar la comida");
+        throw new Error("Error al actualizar el usuario");
     }
 };
 
-const createFood = async(food: Partial<Food>) => {
-    const { img_comida, ... rest } = food;
+const createUser = async(user: Partial<User>) => {
+    const { img_user, ... rest } = user;
 
     try {
 
-        if (!img_comida) {
+        if (!img_user) {
             throw new Error("No se proporcionó ninguna imagen");
         }
 
-        const checkedImages = await prepareImages(img_comida);
+        const checkedImages = await prepareImages(img_user);
 
-        const { data } = await cdlcmtzEatsApi.post(`/menu/food-add/`, {
-            img_comida: checkedImages,
+        const { data } = await cdlcmtzEatsApi.post(`usuarios/usuario-add-movil`, {
+            img_user: checkedImages,
             ... rest,
         });
 
@@ -104,6 +102,6 @@ const createFood = async(food: Partial<Food>) => {
         } else {
             console.error("❌ Error inesperado:", error);
         }
-        throw new Error("Error al actualizar la comida");
+        throw new Error("Error al actualizar el usuario");
     }
 }

@@ -3,7 +3,7 @@ import { TesloMenuType } from "./teslo-menu-type.response";
 import { TesloPivot } from "./teslo-pivot.response";
 
 export interface TesloFood {
-    id: number;
+    id: string;
     platillo: string;
     descripcion: string;
     costo: number;

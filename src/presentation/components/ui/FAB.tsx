@@ -25,5 +25,5 @@ export const FAB = ({ style, iconName, onPress }: Props) => {
             accessoryLeft={ <MyIcon name={ iconName } white /> }
             onPress={onPress}
         />
-    )
-}
+    );
+};

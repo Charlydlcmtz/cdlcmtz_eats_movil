@@ -1,6 +1,6 @@
-import { UserRole } from "../../infraestructure/interfaces/role.interface";
+// import { UserRole } from "../../infraestructure/interfaces/role.interface";
 
-export interface User {
+export interface TesloUser {
     id: string;
     nombre: string;
     apellido_p: string;

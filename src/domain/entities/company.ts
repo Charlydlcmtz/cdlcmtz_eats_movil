@@ -1,4 +1,6 @@
-export interface TesloEmpresa {
+
+
+export interface Company {
     id: string;
     nombre: string;
     rfc: string;

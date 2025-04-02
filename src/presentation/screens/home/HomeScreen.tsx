@@ -36,9 +36,10 @@ export const HomeScreen = () => {
       <MainLayout
         title='Cdlcmtz - Eats'
         subTitle='Aplicación Administrativa'
+        showMenu
       >
         {
-          isLoading 
+          isLoading
           ? (<FullScreenLoader />)
           : <FoodList  foods={ data?.pages.flat() ?? [] } />
         }
