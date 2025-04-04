@@ -14,7 +14,7 @@ export class FoodMapper {
             descripcion: tesloFood.descripcion,
             costo: tesloFood.costo,
             calorias: tesloFood.calorias,
-            img_comida: `http://192.168.0.12/api_cdlcmtz_eats/public/comida/${tesloFood.img_comida}`,
+            img_comida: `http://192.168.0.15/api_cdlcmtz_eats/public/comida/${tesloFood.img_comida}`,
             inicio_fecha_platillo: tesloFood.inicio_fecha_platillo,
             fin_fecha_platillo: tesloFood.fin_fecha_platillo,
             empresa: tesloFood.empresa,

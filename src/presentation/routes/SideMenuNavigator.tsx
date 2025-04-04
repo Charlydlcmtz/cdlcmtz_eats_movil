@@ -2,6 +2,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { CustomDrawer } from '../components/ui/CustomDrawer';
 import { StackNavigator } from '../navigation/StackNavigator';
 import { UserNavigator } from '../navigation/UserNavigation';
+import { CompanyNavigator } from '../navigation/CompanyNavigation';
 
 
 const Drawer = createDrawerNavigator();
@@ -39,6 +40,11 @@ export const SideMenuNavigator = () => {
         name="Usuarios"
         component={UserNavigator}
         options={{ title: 'Usuarios' }}
+      />
+      <Drawer.Screen
+        name="Empresas"
+        component={CompanyNavigator}
+        options={{ title: 'Empresas' }}
       />
     </Drawer.Navigator>
   );

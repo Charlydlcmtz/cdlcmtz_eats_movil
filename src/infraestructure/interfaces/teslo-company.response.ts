@@ -8,4 +8,5 @@ export interface TesloCompany {
     correo: string;
     icon: string;
     colors: string;
+    estatus: boolean;
 }

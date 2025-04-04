@@ -16,6 +16,7 @@ export class CompanyMapper {
             correo: tesloCompany.correo,
             icon: tesloCompany.icon,
             colors: tesloCompany.colors,
+            estatus: true,
         };
     }
 }

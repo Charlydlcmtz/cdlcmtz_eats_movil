@@ -8,4 +8,5 @@ export interface Company {
     correo: string;
     icon: string;
     colors: string;
+    estatus: boolean;
 }
