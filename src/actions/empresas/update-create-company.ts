@@ -22,6 +22,7 @@ const prepareImages = async( images: string ) => {
 
     // Si la imagen es nueva (viene del dispositivo), la subimos
     const uploadedImage = await uploadImage(images);
+
     return uploadedImage;
 };
 
@@ -34,7 +35,7 @@ const uploadImage = async (image: string) => {
         name: image.split('/').pop(),
     });
 
-    const { data } = await cdlcmtzEatsApi.post<{ img: string }>('/empresa/comany-file', formData, {
+    const { data } = await cdlcmtzEatsApi.post<{ img: string }>('/empresa/company-file', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
@@ -42,7 +43,7 @@ const uploadImage = async (image: string) => {
     return data.img;
 }
 
-//TODO revisar si viene el usuario
+//TODO revisar si viene la empresa
 const updateCompany = async (company: Partial<Company>) => {
     const { id, icon, ... rest } = company;
 
@@ -85,7 +86,7 @@ const createCompany = async(company: Partial<Company>) => {
 
         const checkedImages = await prepareImages(icon);
 
-        const { data } = await cdlcmtzEatsApi.post(`empresa/register-company-movil`, {
+        const { data } = await cdlcmtzEatsApi.post(`/empresa/register-company-movil`, {
             icon: checkedImages,
             ... rest,
         });
@@ -102,6 +103,6 @@ const createCompany = async(company: Partial<Company>) => {
         } else {
             console.error("❌ Error inesperado:", error);
         }
-        throw new Error("Error al actualizar la empresa");
+        throw new Error("Error al crear la empresa");
     }
 }

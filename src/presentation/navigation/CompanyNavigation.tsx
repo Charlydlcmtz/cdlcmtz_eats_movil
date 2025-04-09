@@ -4,7 +4,7 @@ import { CompanyScreen } from '../screens/company/CompanyScreen';
 
 export type RootStackParams = {
   CompaniesScreen: undefined;
-  CompanyScreen: { userId: string };
+  CompanyScreen: { companyId: string };
 }
 
 const Stack = createStackNavigator<RootStackParams>();

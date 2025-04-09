@@ -7,7 +7,7 @@ import { CompanyMapper } from "../../infraestructure/mappers/company.mapper";
 
 const emptyCompany: Company = {
     id: '',
-    nombre: 'Nuevo Usuario',
+    nombre: 'Nuevo Empresa',
     rfc: '',
     telefono: '',
     correo: '',
@@ -29,6 +29,6 @@ export const getCompanyById = async (id: string):Promise<Company> => {
 
     } catch (error) {
         console.log(error);
-        throw new Error("Error al actualizar el usuario");
+        throw new Error("Error al actualizar la empresa");
     }
 }

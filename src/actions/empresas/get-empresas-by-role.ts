@@ -12,9 +12,11 @@ export const getCompanys = async ():Promise<Company[]> => {
     try {
         const { data } = await cdlcmtzEatsApi.post<TesloCompany[]>(`/empresa/list-empresas`);
 
-        const companies = data.map(CompanyMapper.tesloCompanyToEntity);
+        if (!data || !Array.isArray(data)) {
+            throw new Error("La respuesta del backend no es válida");
+        }
 
-        console.log(companies);
+        const companies = data.map(CompanyMapper.tesloCompanyToEntity);
 
         return companies;
 

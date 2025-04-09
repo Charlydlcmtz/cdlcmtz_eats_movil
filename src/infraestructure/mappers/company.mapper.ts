@@ -14,7 +14,7 @@ export class CompanyMapper {
             rfc: tesloCompany.rfc,
             telefono: tesloCompany.telefono,
             correo: tesloCompany.correo,
-            icon: tesloCompany.icon,
+            icon: `http://192.168.0.15/api_cdlcmtz_eats/public/empresa/${tesloCompany.icon}`,
             colors: tesloCompany.colors,
             estatus: true,
         };

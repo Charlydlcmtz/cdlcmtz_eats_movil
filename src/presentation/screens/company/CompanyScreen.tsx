@@ -1,20 +1,20 @@
 import { useTheme } from '@react-navigation/native';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { RootStackParams } from '../../navigation/StackNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainLayout } from '../../layouts/MainLayout';
 import { Formik } from 'formik';
 import { CameraAdapter } from '../../../config/adapters/camera-adapter';
 import { ScrollView, View } from 'react-native';
-import { IndexPath, Input, Layout, Text } from '@ui-kitten/components';
+import { Input, Layout, Text } from '@ui-kitten/components';
 import { MyIcon } from '../../components/ui/MyIcon';
-import { UserImage } from '../../components/users/UserImage';
 import * as Yup from 'yup';
 import { FAB } from '../../components/ui/FAB';
 import { Company } from '../../../domain/entities/company';
 import { getCompanyById } from '../../../actions/empresas/get-company-by-id';
 import { updateCreateCompany } from '../../../actions/empresas/update-create-company';
+import { CompanyImage } from '../../components/companies/CompanyImage';
 
 interface Props extends StackScreenProps<RootStackParams, 'CompanyScreen'>{}
 
@@ -73,7 +73,7 @@ export const CompanyScreen = ({ route }: Props) => {
     colors: Yup.string().required('Los colores de la empresa son obligatorios'),
     password: Yup.string().when([], {
       is: () => isCreating,
-      then: schema => schema.required('La contraseña es obligatoria').min(6, 'Mínimo 8 caracteres'),
+      then: schema => schema.required('La contraseña es obligatoria').min(8, 'Mínimo 8 caracteres'),
       otherwise: schema => schema.notRequired(),
     }),
     confirmPassword: Yup.string().oneOf([Yup.ref('password')], 'Las contraseñas no coinciden'),
@@ -112,7 +112,7 @@ export const CompanyScreen = ({ route }: Props) => {
                 <ScrollView style={{ flex: 1 }}>
                   {/* Imagenes de la comida */}
                   <Layout style= {{ marginVertical: 10, justifyContent: 'center', alignItems: 'center' }}>
-                    <UserImage image={values.icon} />
+                    <CompanyImage image={values.icon} />
                   </Layout>
 
                   {/* Formulario */}

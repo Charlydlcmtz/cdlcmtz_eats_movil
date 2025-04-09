@@ -3,6 +3,10 @@ import { CustomDrawer } from '../components/ui/CustomDrawer';
 import { StackNavigator } from '../navigation/StackNavigator';
 import { UserNavigator } from '../navigation/UserNavigation';
 import { CompanyNavigator } from '../navigation/CompanyNavigation';
+import { TypeMenuNavigator } from '../navigation/TypeMenuNavigator';
+import { RoleNavigator } from '../navigation/RoleNavigation';
+import { OrderNavigator } from '../navigation/OrderNavigation';
+import { CreateOrderNavigator } from '../navigation/CreateOrderNavigation';
 
 
 const Drawer = createDrawerNavigator();
@@ -45,6 +49,26 @@ export const SideMenuNavigator = () => {
         name="Empresas"
         component={CompanyNavigator}
         options={{ title: 'Empresas' }}
+      />
+      <Drawer.Screen
+        name="Ordenes"
+        component={OrderNavigator}
+        options={{ title: 'Ordenes' }}
+      />
+      <Drawer.Screen
+        name="Pedir"
+        component={CreateOrderNavigator}
+        options={{ title: 'Pedir' }}
+      />
+      <Drawer.Screen
+        name="Tipos de Menu"
+        component={TypeMenuNavigator}
+        options={{ title: 'Tipos Menu' }}
+      />
+      <Drawer.Screen
+        name="Roles"
+        component={RoleNavigator}
+        options={{ title: 'Roles' }}
       />
     </Drawer.Navigator>
   );

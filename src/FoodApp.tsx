@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SideMenuNavigator } from './presentation/routes/SideMenuNavigator';
 import { useAuthStore } from './presentation/store/auth/useAuthStore';
 import { AuthStackNavigator } from './presentation/navigation/AuthStackNavigator';
+import { CartProvider } from './presentation/context/CartContext';
 
 const queryClient = new QueryClient();
 
@@ -42,14 +43,16 @@ export const FoodApp = () => {
     <QueryClientProvider client={ queryClient }>
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={theme}>
-        <NavigationContainer theme={navTheme}>
-          <AuthProvider>
-            { status === 'authenticated'
-              ? <SideMenuNavigator />
-              : <AuthStackNavigator />
-            }
-          </AuthProvider>
-        </NavigationContainer>
+        <CartProvider>
+          <NavigationContainer theme={navTheme}>
+            <AuthProvider>
+              { status === 'authenticated'
+                ? <SideMenuNavigator />
+                : <AuthStackNavigator />
+              }
+            </AuthProvider>
+          </NavigationContainer>
+        </CartProvider>
       </ApplicationProvider>
     </QueryClientProvider>
   );
