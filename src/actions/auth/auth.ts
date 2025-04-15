@@ -116,12 +116,16 @@ export const authForgotPassword = async(correo: string, tipo_app: string) => {
     }
 };
 
-export const authCheckStatus = async () => {
+export const authCheckStatus = async (token: string) => {
     try {
-        const { data } = await cdlcmtzEatsApi.get<AuthResponse>('/check-token');
-        return returnUserToken(data);
+        const { data } = await cdlcmtzEatsApi.post<AuthResponse>('/check-token', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        return data;
     } catch (error) {
-        console.log({error});
         return null;
     }
-}
+};

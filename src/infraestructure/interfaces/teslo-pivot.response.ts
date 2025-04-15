@@ -1,5 +1,5 @@
 export interface TesloPivot {
-    id: number;
+    id: string;
     pedido_id: number;
     menu_id: number;
     cantidad: number;

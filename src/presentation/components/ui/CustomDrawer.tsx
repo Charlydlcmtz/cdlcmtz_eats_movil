@@ -13,34 +13,55 @@ export const CustomDrawer = (props: any) => {
     const userImage = user?.img_user
     ? user.img_user.startsWith('http')
         ? user.img_user
-        : `http://192.168.0.15/api_cdlcmtz_eats/public/img_users/${user.img_user}`
+        : `http://192.168.0.17/api_cdlcmtz_eats/public/img_users/${user.img_user}`
     : null;
 
   return (
-    <DrawerContentScrollView { ...props }>
-        <Layout style={{ padding: 20, alignItems: 'center' }}>
-            <Image
-                source={
-                    userImage
-                    ? { uri: userImage }
-                    : require('../../../assets/no-product-image.png')
-                }
-                style={{ width: 80, height: 80, borderRadius: 40, marginBottom: 10 }}
-            />
-            <Text category="h6" style={{ textAlign: 'center', fontFamily: 'System' }}>
-                CDLCMTZ-EATS
-            </Text>
+    <Layout style={{ flex: 1 }}>
+      <DrawerContentScrollView
+        {...props}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      >
+        <Layout style={{ padding: 20, alignItems: "center" }}>
+          <Image
+            source={
+              userImage
+                ? { uri: userImage }
+                : require("../../../assets/no-product-image.png")
+            }
+            style={{
+              width: 80,
+              height: 80,
+              borderRadius: 40,
+              marginBottom: 10,
+            }}
+          />
+          <Text
+            category="h6"
+            style={{ textAlign: "center", fontFamily: "System" }}
+          >
+            CDLCMTZ-EATS
+          </Text>
         </Layout>
 
         <View style={{ flex: 1, paddingHorizontal: 10 }}>
-            <DrawerItemList {...props} />
+          <DrawerItemList {...props} />
         </View>
+      </DrawerContentScrollView>
 
-        <Layout style={{ padding: 10, alignItems: 'center' }} >
-            <Text appearance="hint" style={{ fontSize: 12, textAlign: 'center', fontFamily: 'System' }}>
-                © Charly & Jimmy. Todos los derechos reservados, menos el derecho a soñar.
-            </Text>
-        </Layout>
-    </DrawerContentScrollView>
+      <Layout style={{ padding: 10, alignItems: "center" }}>
+        <Text
+          appearance="hint"
+          style={{
+            fontSize: 12,
+            textAlign: "center",
+            fontFamily: "System",
+          }}
+        >
+          © Charly & Jimmy. Todos los derechos reservados, menos el derecho a
+          soñar.
+        </Text>
+      </Layout>
+    </Layout>
   );
 };

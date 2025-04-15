@@ -1,5 +1,5 @@
 import { Layout, Text, Button, Toggle } from '@ui-kitten/components';
-import { Alert, useWindowDimensions } from 'react-native';
+import { Alert, Image, useWindowDimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { MyIcon } from '../../components/ui/MyIcon';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { UserForm } from '../../components/auth/UserForm';
 import { CompanyForm } from '../../components/auth/CompanyForm';
 import { prepareImages } from '../../../actions/auth/update-create-user';
+import Toast from 'react-native-toast-message';
 
 interface Props extends StackScreenProps<RootStackParams, 'RegisterScreen'>{}
 
@@ -17,6 +18,7 @@ export const RegisterScreen = ({ navigation }:Props) => {
   const { register } = useAuthStore();
   const [isPosting, setIsPosting] = useState(false);
   const [isCompany, setIsCompany] = useState(false);
+  const [showErrors, setShowErrors] = useState(false);
   const [form, setForm] = useState({
     nombre: '',
     username: '',
@@ -39,7 +41,11 @@ export const RegisterScreen = ({ navigation }:Props) => {
 
     // Validaciones generales
     if (form.correo.trim() === '' || form.password.trim() === '' || form.password_confirm === '') {
-      Alert.alert('Error', 'Correo y contraseña son obligatorios');
+      Toast.show({
+        type: 'error',
+        text1: 'Campos Obligatorios',
+        text2: 'Correo y contraseña son obligatorios.',
+      });
       return;
     }
 
@@ -48,14 +54,18 @@ export const RegisterScreen = ({ navigation }:Props) => {
     // Validaciones por tipo
     if (!isCompany) {
       if (
-          form.nombre.trim() === '' || 
-          form.username.trim() === '' || 
+          form.nombre.trim() === '' ||
+          form.username.trim() === '' ||
           form.apellido_paterno.trim() === '' ||
           form.apellido_materno.trim() === '' ||
           form.telefono.trim() === ''
         ) {
-        Alert.alert("Error", "Faltan datos de usuario");
-        return;
+          Toast.show({
+            type: 'error',
+            text1: 'Campos Obligatorios',
+            text2: 'Faltan datos de usuario.',
+          });
+          return;
       }
       tipo_usuario = 'usuario';
     }else{
@@ -63,7 +73,11 @@ export const RegisterScreen = ({ navigation }:Props) => {
         form.nombre.trim() === '' ||
         form.rfc.trim() === ''
       ) {
-        Alert.alert("Error", "Faltan datos de empresa");
+        Toast.show({
+          type: 'error',
+          text1: 'Campos Obligatorios',
+          text2: 'Faltan datos de empresa.',
+        });
         return;
       }
       tipo_usuario = 'empresa';
@@ -111,82 +125,65 @@ export const RegisterScreen = ({ navigation }:Props) => {
   return (
     <Layout style={{ flex: 1 }}>
       <ScrollView
-        style={{ marginHorizontal: 40 }}
-        contentContainerStyle={{ paddingBottom: 60 }}
+        style={{ marginHorizontal: 0 }}
+        contentContainerStyle={{ paddingHorizontal: 30, paddingBottom: 60 }}
+          showsVerticalScrollIndicator={true}
+          indicatorStyle="black" // o 'white' si estás en dark mode
       >
-
-          {/* Inputs */}
-          <Layout style={{ paddingTop: height * 0.05 }}>
-              <Text category="h1">Registrarse</Text>
+        {/* Imagen superior */}
+        <Layout style={{ alignItems: 'center', paddingTop: height * 0.05 }}>
+          <Image
+            source={require('../../../assets/register.png')}
+            style={{ width: 150, height: 150, marginBottom: 10 }}
+          />
+          <Layout style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <MyIcon name="person-add-outline" fill="#3366FF" style={{ width: 30, height: 30, marginRight: 8 }} />
+            <Text category="h1">Registrarse</Text>
           </Layout>
+        </Layout>
 
-          <Layout
-            style={{ marginTop: 20 }}
+        {/* Toggle empresa / usuario */}
+        <Layout style={{ marginTop: 20, alignItems: 'center' }}>
+          <Toggle
+            status="primary"
+            checked={isCompany}
+            onChange={setIsCompany}
+            style={{ marginBottom: 20 }}
           >
-            <Toggle
-              checked={isCompany}
-              onChange={setIsCompany}
-              style={{ right: 70, marginBottom: 20 }}>
-            {isCompany ? 'Empresa' : 'Usuario'}
-            </Toggle>
-            { isCompany ?
-              (
-                <CompanyForm form={form} setForm={setForm} />
-              ) :
-              (
-                <UserForm form={form} setForm={setForm} />
-              )
-            }
-          </Layout>
+            {isCompany ? 'Registrarse como Empresa' : 'Registrarse como Usuario'}
+          </Toggle>
+        </Layout>
 
-          {/* Space */}
-          <Layout style={{ height: 10 }} />
+        {/* Formulario dinámico */}
+        {isCompany
+          ? <CompanyForm form={form} setForm={setForm} showErrors={showErrors} />
+          : <UserForm form={form} setForm={setForm} showErrors={showErrors} />
+        }
 
-          {/* Button */}
-          <Layout>
-            <Button
-              accessoryRight={<MyIcon name="arrow-forward-outline" white />}
-              onPress={onRegister}
-            >
-              Registrarse
-            </Button>
+        {/* Space */}
+        <Layout style={{ height: 10 }} />
 
-            <Layout style={{ marginTop: 10, alignItems: 'center' }}>
-              <Text
-                status="primary"
-                category="s1"
-                onPress={() => navigation.goBack()}
-              >
-                ¿Ya tienes cuenta?
-              </Text>
-            </Layout>
-          </Layout>
+        {/* Botón */}
+        <Layout style={{ marginTop: 20 }}>
+          <Button
+            accessoryRight={<MyIcon name="arrow-forward-outline" white />}
+            onPress={onRegister}
+            disabled={isPosting}
+          >
+            {isPosting ? 'Registrando...' : 'Registrarse'}
+          </Button>
+        </Layout>
 
-          {/* <Layout>
-              <Button
-                  accessoryRight={ <MyIcon name="arrow-forward-outline" white /> }
-                  onPress={ onRegister }
-              >
-                  Registrarse
-              </Button>
-          </Layout> */}
-
-          {/* Información para crear cuenta */}
-          {/* <Layout style={{ height: 50 }} />
-          <Layout 
-          style={{
-              alignItems: 'flex-end',
-              flexDirection: 'row',
-              justifyContent: 'center',
-          }}>
-              <Text
-                status='primary'
-                category='s1'
-                onPress={() => navigation.goBack()}
-              >
-                ¿Ya tienes cuenta?
-              </Text>
-          </Layout> */}
+        {/* Navegación */}
+        <Layout style={{ marginTop: 15, alignItems: 'center' }}>
+          <Text
+            status="primary"
+            category="s1"
+            onPress={() => navigation.goBack()}
+          >
+            ¿Ya tienes cuenta? Inicia sesión
+          </Text>
+        </Layout>
       </ScrollView>
     </Layout>
   );

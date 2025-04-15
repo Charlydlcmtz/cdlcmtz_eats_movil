@@ -18,13 +18,13 @@ export const AuthProvider = ({children}: PropsWithChildren) => {
             if ( status === 'authenticated' ) {
                 navigation.reset({
                     index: 0,
-                    routes: [{ name: 'HomeScreen' }],
-                })
+                    routes: [{ name: 'HomeScreen', params: { initialTab: 'CreateOrderScreen' } }],
+                });
             }else{
                 navigation.reset({
                     index: 0,
                     routes: [{ name: 'LoginScreen' }],
-                })
+                });
             }
         }
     }, [status]);

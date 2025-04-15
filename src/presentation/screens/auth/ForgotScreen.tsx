@@ -6,6 +6,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigator';
 import { useState } from 'react';
 import { useAuthStore } from '../../store/auth/useAuthStore';
+import Toast from 'react-native-toast-message';
 
 interface Props extends StackScreenProps<RootStackParams, 'ForgotScreen'>{}
 
@@ -23,8 +24,12 @@ export const ForgotScreen = ({ navigation }:Props) => {
 
         // Validaciones generales
         if (form.correo.trim() === '') {
-          Alert.alert('Error', 'El correo es obligatorio');
-          return;
+            Toast.show({
+                type: 'error',
+                text1: 'Campo Obligatorio',
+                text2: 'El correo es obligatorio.',
+            });
+            return;
         }
 
         setIsPosting(true);
@@ -32,11 +37,19 @@ export const ForgotScreen = ({ navigation }:Props) => {
         setIsPosting(false);
 
         if (resp.estatus !== 'success') {
-            Alert.alert("Error", resp.mensaje || "No se pudo enviar el correo");
+            Toast.show({
+                type: 'error',
+                text1: 'Error Correo',
+                text2: resp.mensaje || "No se pudo enviar el correo.",
+            });
             return;
         }
 
-        Alert.alert("Éxito", resp.mensaje || "Correo enviado correctamente");
+        Toast.show({
+            type: 'success',
+            text1: 'Enviado',
+            text2: resp.mensaje || "Correo enviado correctamente",
+        });
         setForm({correo: ''});
       };
 
@@ -46,7 +59,7 @@ export const ForgotScreen = ({ navigation }:Props) => {
 
             {/* Inputs */}
             <Layout style={{ paddingTop: height * 0.35 }}>
-                <Text category="h1">Olvidaste la Contraseña</Text>
+                <Text category="h1">Recuperar Contraseña</Text>
             </Layout>
 
             <Layout style={{ marginTop: 20 }}>

@@ -1,5 +1,7 @@
 // import { UserRole } from "../../infraestructure/interfaces/role.interface";
 
+import { UserRole } from "./role.interface";
+
 export interface TesloUser {
     id: string;
     nombre: string;
@@ -11,6 +13,6 @@ export interface TesloUser {
     correo: string;
     telefono: string;
     id_empresa: string;
-    // role: UserRole;
+    role: UserRole;
     estatus: boolean;
 }

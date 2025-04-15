@@ -11,6 +11,6 @@ export interface User {
     correo: string;
     telefono: string;
     id_empresa: string;
-    // role: UserRole;
-    estatus: boolean;
+    role: UserRole;
+    estatus: number;
 }

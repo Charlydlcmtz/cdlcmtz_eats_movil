@@ -1,6 +1,8 @@
 import 'react-native-gesture-handler';
 
 import * as eva from '@eva-design/eva';
+import Toast from 'react-native-toast-message';
+import { toastConfig } from './config/ui/toastConfig'; // 👈 ajusta el path si lo mueves
 import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { useColorScheme } from 'react-native';
@@ -50,6 +52,7 @@ export const FoodApp = () => {
                 ? <SideMenuNavigator />
                 : <AuthStackNavigator />
               }
+              <Toast config={toastConfig} />
             </AuthProvider>
           </NavigationContainer>
         </CartProvider>

@@ -36,7 +36,7 @@ export const FoodList = ({ foods, fetchNextPage }: Props) => {
             refreshControl={
                 <RefreshControl
                     refreshing={ isRefreshing }
-                    onRefresh={ onPullToRefresh } 
+                    onRefresh={ onPullToRefresh }
                 />
             }
         />

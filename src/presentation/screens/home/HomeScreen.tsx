@@ -2,21 +2,24 @@ import { getFoodByPage } from '../../../actions/comida/get-food-by-page';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { MainLayout } from '../../layouts/MainLayout';
 import { FullScreenLoader } from '../../components/ui/FullScreenLoader';
-import { FoodList } from '../../components/foods/FoodList';
+
 import { FAB } from '../../components/ui/FAB';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParams } from '../../navigation/StackNavigator';
+import { useEffect } from 'react';
+import { useAuthStore } from '../../store/auth/useAuthStore';
+import { StackActions, useNavigation } from '@react-navigation/native';
+import { FoodTableList } from '../../components/foods/FoodTableList';
 
 
 export const HomeScreen = () => {
 
-  const navigation = useNavigation<NavigationProp<RootStackParams>>();
+  const navigation = useNavigation();
+  const { user } = useAuthStore();
 
-  // const { isLoading, data: foods = [] } = useQuery({
-  //   queryKey: ['foods', 'infinite'],
-  //   staleTime: 1000 * 60 * 60, // 1 hour
-  //   queryFn: () => getFoodByPage(0),
-  // });
+  useEffect(() => {
+    if (user?.role.nombre === 'User_Role') {
+      navigation.dispatch(StackActions.replace('CreateOrderScreen'));
+    }
+  }, []);
 
   const { isLoading, data } = useInfiniteQuery({
     queryKey: ['foods', 'infinite'],
@@ -41,10 +44,11 @@ export const HomeScreen = () => {
         {
           isLoading
           ? (<FullScreenLoader />)
-          : <FoodList  foods={ data?.pages.flat() ?? [] } />
+          : <FoodTableList foods={ data?.pages.flat() ?? [] } />
+          // <FoodList  foods={ data?.pages.flat() ?? [] } />
         }
       </MainLayout>
-            
+
       <FAB
         iconName="plus-outline"
         onPress={() => navigation.navigate('FoodScreen', { foodId: 'new' })}

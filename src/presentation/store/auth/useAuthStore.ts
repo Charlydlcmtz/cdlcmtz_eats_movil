@@ -62,12 +62,21 @@ export const useAuthStore = create<AuthState>()( (set, get) => ({
     },
 
     checkStatus: async () => {
-        const resp = await authCheckStatus();
-        if ( !resp ) {
+        const token = await StoragerAdapter.getItem('token');
+
+        if (!token) {
             set({ status: 'unauthenticated', token: undefined, user: undefined });
             return;
         }
-        await StoragerAdapter.setItem('token', resp.token);
+
+        const resp = await authCheckStatus(token); // aquí va el token
+
+        if (!resp) {
+            await StoragerAdapter.removeItem('token');
+            set({ status: 'unauthenticated', token: undefined, user: undefined });
+            return;
+        }
+
         set({ status: 'authenticated', token: resp.token, user: resp.user });
     },
 

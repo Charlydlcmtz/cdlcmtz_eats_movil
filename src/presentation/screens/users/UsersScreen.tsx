@@ -7,6 +7,7 @@ import { FullScreenLoader } from '../../components/ui/FullScreenLoader';
 import { FAB } from '../../components/ui/FAB';
 import { UserList } from '../../components/users/UsersList';
 import { getUserByPage } from '../../../actions/usuarios/get-user-by-page';
+import { UserTableList } from '../../components/users/UserTableList';
 
  export const UsersScreen = () => {
 
@@ -38,7 +39,8 @@ import { getUserByPage } from '../../../actions/usuarios/get-user-by-page';
         {
           isLoading
           ? (<FullScreenLoader />)
-          : <UserList  users={ data?.pages.flat() ?? [] } />
+          : <UserTableList users={ data?.pages.flat() ?? [] } />
+          // <UserList  users={ data?.pages.flat() ?? [] } />
         }
       </MainLayout>
 

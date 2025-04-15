@@ -6,7 +6,7 @@ import { Food } from "../../domain/entities/food";
 
 export const updateCreateFood = ( food: Partial<Food> ) => {
 
-    food.costo = isNaN(Number(food.costo)) ? 0 : Number(food.costo);
+    // food.costo = isNaN(Number(food.costo)) ? 0 : Number(food.costo);
 
     if ( food.id && food.id !== 'new') {
         return updateFood(food);

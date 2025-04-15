@@ -8,8 +8,7 @@ import { OrderMapper } from "../../infraestructure/mappers/order.mapper";
 
 
 export const getOrderById = async (id: string):Promise<Order> => {
-
-
+    console.log(id);
     try {
         const { data } = await cdlcmtzEatsApi.get<TesloOrder>(`/menu/get-pedido/${id}`);
 
@@ -17,6 +16,6 @@ export const getOrderById = async (id: string):Promise<Order> => {
 
     } catch (error) {
         console.log(error);
-        throw new Error("Error al actualizar la orden");
+        throw new Error("Error al traer la orden");
     }
 }
