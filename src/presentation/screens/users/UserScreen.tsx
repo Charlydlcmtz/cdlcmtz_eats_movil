@@ -1,4 +1,3 @@
-import { useTheme } from '@react-navigation/native';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { RootStackParams } from '../../navigation/StackNavigator';
@@ -6,8 +5,8 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { MainLayout } from '../../layouts/MainLayout';
 import { Formik } from 'formik';
 import { CameraAdapter } from '../../../config/adapters/camera-adapter';
-import { ScrollView, View } from 'react-native';
-import { IndexPath, Input, Layout, Select, SelectItem, Text } from '@ui-kitten/components';
+import { Alert, ScrollView, StyleSheet, useColorScheme, View } from 'react-native';
+import { IndexPath, Input, Layout, Text } from '@ui-kitten/components';
 import { MyIcon } from '../../components/ui/MyIcon';
 import { UserImage } from '../../components/users/UserImage';
 import { User } from '../../../domain/entities/user';
@@ -15,6 +14,9 @@ import { getUserById, updateCreateUser } from '../../../actions/usuarios';
 import * as Yup from 'yup';
 import { getCompanys } from '../../../actions/empresas/get-empresas-by-role';
 import { FAB } from '../../components/ui/FAB';
+import { CustomSelect } from '../../components/ui/CustomSelect';
+import Toast from 'react-native-toast-message';
+import { isAxiosError } from 'axios';
 
 interface Props extends StackScreenProps<RootStackParams, 'UserScreen'>{}
 
@@ -39,14 +41,16 @@ const emptyUser: FormUser = {
   password: '',
   confirmPassword: '',
   // role: UserRole;
-  estatus: true,
+  estatus: 1,
 };
 
 export const UserScreen = ({ route }: Props) => {
   const userIdRef = useRef(route.params.userId);
-  const theme = useTheme();
   const queryClient = useQueryClient();
   const isCreating = userIdRef.current === 'new';
+  const isDarkMode = useColorScheme() === 'dark';
+  const styles = createStyles(isDarkMode);
+  const [isSaving, setIsSaving] = useState(false);
 
   const [selectedIndex, setSelectedIndex] = useState<IndexPath | IndexPath[]>(new IndexPath(0));
 
@@ -82,9 +86,9 @@ export const UserScreen = ({ route }: Props) => {
     apellido_p: Yup.string().required('El apellido paterno es obligatorio'),
     apellido_m: Yup.string().required('El apellido materno es obligatorio'),
     telefono: Yup.string().required('El teléfono es obligatorio'),
-    no_empleado: Yup.string().required('El número de empleado es obligatorio'),
+    // no_empleado: Yup.string().required('El número de empleado es obligatorio'),
     correo: Yup.string().email('Correo inválido').required('El correo es obligatorio'),
-    id_empresa: Yup.string().required('La empresa es obligatoria'),
+    // id_empresa: Yup.string().required('La empresa es obligatoria'),
     password: Yup.string().when([], {
       is: () => isCreating,
       then: schema => schema.required('La contraseña es obligatoria').min(6, 'Mínimo 6 caracteres'),
@@ -111,13 +115,33 @@ export const UserScreen = ({ route }: Props) => {
         }}
       >
         {
-          ({ handleChange, handleSubmit, values, errors, touched, setFieldValue }) => (
+          ({ handleChange, handleSubmit, values, errors, touched, setFieldValue, resetForm  }) => (
             <MainLayout
               title={ values.nombre }
               subTitle={ `Usuario: ${values.username}` }
-              rightAction={ async() => {
-                const photos = await CameraAdapter.getPicturesFromLibrary();
-                setFieldValue('img_user', photos);
+              rightAction={() => {
+                Alert.alert(
+                  'Selecciona una opción',
+                  '¿Qué deseas hacer?',
+                  [
+                    {
+                      text: 'Tomar foto',
+                      onPress: async () => {
+                        const img = await CameraAdapter.takePicture();
+                        setFieldValue('img_user', img);
+                      },
+                    },
+                    {
+                      text: 'Elegir de galería',
+                      onPress: async () => {
+                        const img = await CameraAdapter.getPicturesFromLibrary();
+                        setFieldValue('img_user', img);
+                      },
+                    },
+                    { text: 'Cancelar', style: 'cancel' },
+                  ],
+                  { cancelable: true }
+                );
               }}
               rightActionIcon="camera-outline"
             >
@@ -136,7 +160,7 @@ export const UserScreen = ({ route }: Props) => {
                       value={ values.nombre }
                       accessoryLeft={ <MyIcon name="person-outline" white /> }
                       onChangeText={handleChange('nombre')}
-                      style={{ marginVertical: 5 }}
+                      style={styles.input}
                       status={touched.nombre && errors.nombre ? 'danger' : 'basic'}
                       caption={touched.nombre && errors.nombre ? errors.nombre : ''}
                     />
@@ -145,7 +169,7 @@ export const UserScreen = ({ route }: Props) => {
                       value={ values.username }
                       accessoryLeft={ <MyIcon name="person-outline" white /> }
                       onChangeText={handleChange('username')}
-                      style={{ marginVertical: 5 }}
+                      style={styles.input}
                       status={touched.username && errors.username ? 'danger' : 'basic'}
                       caption={touched.username && errors.username ? errors.username : ''}
                     />
@@ -154,7 +178,7 @@ export const UserScreen = ({ route }: Props) => {
                       value={ values.apellido_p }
                       accessoryLeft={ <MyIcon name="person-outline" white /> }
                       onChangeText={handleChange('apellido_p')}
-                      style={{ marginVertical: 5 }}
+                      style={styles.input}
                       status={touched.apellido_p && errors.apellido_p ? 'danger' : 'basic'}
                       caption={touched.apellido_p && errors.apellido_p ? errors.apellido_p : ''}
                     />
@@ -163,7 +187,7 @@ export const UserScreen = ({ route }: Props) => {
                       value={ values.apellido_m }
                       accessoryLeft={ <MyIcon name="person-outline" white /> }
                       onChangeText={handleChange('apellido_m')}
-                      style={{ marginVertical: 5 }}
+                      style={styles.input}
                       status={touched.apellido_m && errors.apellido_m ? 'danger' : 'basic'}
                       caption={touched.apellido_m && errors.apellido_m ? errors.apellido_m : ''}
                     />
@@ -173,7 +197,7 @@ export const UserScreen = ({ route }: Props) => {
                       value={ values.telefono }
                       accessoryLeft={ <MyIcon name="phone-outline" white /> }
                       onChangeText={handleChange('telefono')}
-                      style={{ marginVertical: 5 }}
+                      style={styles.input}
                       status={touched.telefono && errors.telefono ? 'danger' : 'basic'}
                       caption={touched.telefono && errors.telefono ? errors.telefono : ''}
                     />
@@ -183,7 +207,7 @@ export const UserScreen = ({ route }: Props) => {
                       keyboardType="number-pad"
                       accessoryLeft={ <MyIcon name="briefcase-outline" white /> }
                       onChangeText={handleChange('no_empleado')}
-                      style={{ marginVertical: 5 }}
+                      style={styles.input}
                       status={touched.no_empleado && errors.no_empleado ? 'danger' : 'basic'}
                       caption={touched.no_empleado && errors.no_empleado ? errors.no_empleado : ''}
                     />
@@ -194,39 +218,34 @@ export const UserScreen = ({ route }: Props) => {
                       autoCapitalize="none"
                       accessoryLeft={ <MyIcon name="email-outline" white /> }
                       onChangeText={handleChange('correo')}
-                      style={{ marginVertical: 5 }}
+                      style={styles.input}
                       status={touched.correo && errors.correo ? 'danger' : 'basic'}
                       caption={touched.correo && errors.correo ? errors.correo : ''}
                     />
-                    <Layout style={{ marginVertical: 5 }}>
+                    <Layout style={styles.input}>
                       <Text style={{ marginBottom: 5, fontWeight: 'bold' }}>Empresa</Text>
-
-                      <Select
-                        placeholder="Seleccionar empresa"
-                        disabled={loadingEmpresas}
-                        selectedIndex={
-                          empresas.findIndex((e) => e.id === values.id_empresa) >= 0
-                            ? new IndexPath(empresas.findIndex((e) => e.id === values.id_empresa))
-                            : undefined
-                        }
-                        value={
-                          empresas.find((e) => e.id === values.id_empresa)?.nombre || 'Seleccionar empresa'
-                        }
-                        onSelect={(index) => {
-                          if (Array.isArray(index)) return; // solo permitimos selección simple
-                          const selectedEmpresa = empresas[index.row];
-                          setFieldValue('id_empresa', selectedEmpresa.id);
-                        }}
-                      >
-                        {empresas.map((empresa) => (
-                          <SelectItem key={empresa.id} title={empresa.nombre} />
-                        ))}
-                      </Select>
+                      <CustomSelect
+                        options={empresas.map(e => ({
+                          label: e.nombre,
+                          value: e.id,
+                        }))}
+                        selectedValue={values.id_empresa}
+                        onValueChange={(val) => setFieldValue('id_empresa', val)}
+                      />
 
                       {touched.id_empresa && errors.id_empresa && (
                         <Text style={{ color: 'red', marginTop: 5 }}>{errors.id_empresa}</Text>
                       )}
                     </Layout>
+                    <Text style={{ marginBottom: 5, fontWeight: 'bold' }}>Estatus</Text>
+                    <CustomSelect
+                      options={[
+                        { label: 'Activo', value: 1 },
+                        { label: 'Inactivo', value: 0 },
+                      ]}
+                      selectedValue={values.estatus}
+                      onValueChange={(val) => setFieldValue('estatus', val)}
+                    />
                   </Layout>
 
                   {/* Contraseña (solo si aplica) */}
@@ -237,7 +256,7 @@ export const UserScreen = ({ route }: Props) => {
                         value={values.password}
                         accessoryLeft={<MyIcon name="lock-outline" white />}
                         onChangeText={handleChange('password')}
-                        style={{ marginVertical: 5 }}
+                        style={styles.input}
                         secureTextEntry
                         status={touched.password && errors.password ? 'danger' : 'basic'}
                         caption={touched.password && errors.password ? errors.password : ''}
@@ -247,7 +266,7 @@ export const UserScreen = ({ route }: Props) => {
                         value={values.confirmPassword}
                         accessoryLeft={<MyIcon name="lock-outline" white />}
                         onChangeText={handleChange('confirmPassword')}
-                        style={{ marginVertical: 5 }}
+                        style={styles.input}
                         secureTextEntry
                         status={touched.confirmPassword && errors.confirmPassword ? 'danger' : 'basic'}
                         caption={touched.confirmPassword && errors.confirmPassword ? errors.confirmPassword : ''}
@@ -263,29 +282,65 @@ export const UserScreen = ({ route }: Props) => {
                     </Text>
                   )}
 
-                  {/* Boton de guardar */}
-                  {/* <Button
-                    accessoryLeft={ <MyIcon name="save-outline" white /> }
-                    onPress={ () => handleSubmit()}
-                    disabled={mutation.isPending}
-                    style={{margin: 15 }}
-                  >
-                    Guardar
-                  </Button> */}
-
-
-
                   <Layout style={{ height: 200 }}  />
                 </ScrollView>
                 {/* FAB flotante fuera del scroll */}
+                {/* // Dentro del return 👇 */}
                 <FAB
-                  iconName="save-outline"
-                  onPress={() => handleSubmit()}
-                  style={{
-                    position: 'absolute',
-                    bottom: 300, // 👈 cambia de 30 a 100
-                    right: 10,
+                  iconName={isSaving ? "clock-outline" : "save-outline"}
+                  onPress={async () => {
+                    setIsSaving(true);
+                    try {
+                      await mutation.mutateAsync({
+                        ...values,
+                        id: isCreating ? '' : values.id, // o foodIdRef.current
+                      });
+
+                      Toast.show({
+                        type: 'success',
+                        text1: isCreating ? 'Registro exitoso' : 'Actualización exitosa',
+                        text2: isCreating ? 'El elemento ha sido creado correctamente' : 'Los cambios fueron guardados',
+                      });
+
+                      if (isCreating) {
+                        resetForm(); // limpia formulario
+                        queryClient.invalidateQueries({ queryKey: ['users'] }); // o el queryKey correspondiente
+                      }
+
+                    } catch (error) {
+                      if (isAxiosError(error)) {
+                        const mensaje = error.response?.data?.mensaje;
+
+                        if (Array.isArray(mensaje)) {
+                          // Errores de validación: mostrar todos
+                          mensaje.forEach(msg => {
+                            Toast.show({
+                              type: 'error',
+                              text1: 'Error de validación',
+                              text2: msg,
+                            });
+                          });
+                        } else {
+                          // Error general
+                          Toast.show({
+                            type: 'error',
+                            text1: 'Error al guardar',
+                            text2: mensaje || 'Error desconocido',
+                          });
+                        }
+                      } else {
+                        Toast.show({
+                          type: 'error',
+                          text1: 'Error inesperado',
+                          text2: 'Algo salió mal. Intenta más tarde.',
+                        });
+                      }
+                    } finally {
+                      setTimeout(() => setIsSaving(false), 600);
+                    }
                   }}
+                  disabled={isSaving}
+                  style={styles.fab_boton}
                 />
               </View>
             </MainLayout>
@@ -293,5 +348,20 @@ export const UserScreen = ({ route }: Props) => {
         }
       </Formik>
   );
-}
+};
 
+const createStyles = (isDarkMode: boolean) =>
+  StyleSheet.create({
+    input: {
+      marginVertical: 5,
+      backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF20',
+      borderColor: isDarkMode ? '#555' : '#FFFFFF55',
+      color: isDarkMode ? '#FFFFFF' : '#000000',
+    },
+    fab_boton: {
+      backgroundColor: isDarkMode ? '#03a9f4' : '#7B1FA2',
+      position: 'absolute',
+      bottom: 150,
+      right: 10,
+    },
+});

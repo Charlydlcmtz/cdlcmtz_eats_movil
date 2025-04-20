@@ -1,5 +1,5 @@
 import { Layout, Text, Button, Toggle } from '@ui-kitten/components';
-import { Alert, Image, useWindowDimensions } from 'react-native';
+import { Alert, Image, StyleSheet, useColorScheme, useWindowDimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { MyIcon } from '../../components/ui/MyIcon';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -19,6 +19,8 @@ export const RegisterScreen = ({ navigation }:Props) => {
   const [isPosting, setIsPosting] = useState(false);
   const [isCompany, setIsCompany] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
+  const isDarkMode = useColorScheme() === 'dark';
+  const styles = createStyles(isDarkMode);
   const [form, setForm] = useState({
     nombre: '',
     username: '',
@@ -145,10 +147,10 @@ export const RegisterScreen = ({ navigation }:Props) => {
         {/* Toggle empresa / usuario */}
         <Layout style={{ marginTop: 20, alignItems: 'center' }}>
           <Toggle
-            status="primary"
+            status={isDarkMode ? 'primary' : 'info'} // más contraste en modo claro
             checked={isCompany}
             onChange={setIsCompany}
-            style={{ marginBottom: 20 }}
+            style={styles.toggle}
           >
             {isCompany ? 'Registrarse como Empresa' : 'Registrarse como Usuario'}
           </Toggle>
@@ -169,6 +171,7 @@ export const RegisterScreen = ({ navigation }:Props) => {
             accessoryRight={<MyIcon name="arrow-forward-outline" white />}
             onPress={onRegister}
             disabled={isPosting}
+            style={styles.boton}
           >
             {isPosting ? 'Registrando...' : 'Registrarse'}
           </Button>
@@ -176,11 +179,7 @@ export const RegisterScreen = ({ navigation }:Props) => {
 
         {/* Navegación */}
         <Layout style={{ marginTop: 15, alignItems: 'center' }}>
-          <Text
-            status="primary"
-            category="s1"
-            onPress={() => navigation.goBack()}
-          >
+          <Text style={styles.text} onPress={() => navigation.navigate('LoginScreen')}>
             ¿Ya tienes cuenta? Inicia sesión
           </Text>
         </Layout>
@@ -188,3 +187,20 @@ export const RegisterScreen = ({ navigation }:Props) => {
     </Layout>
   );
 };
+
+const createStyles = (isDarkMode: boolean) =>
+  StyleSheet.create({
+    toggle: {
+      marginBottom: 20,
+      backgroundColor: isDarkMode ? '#2C2C2C' : '#B3E5FC', // Fondo del track
+      borderRadius: 20,
+      padding: 4,
+    },
+    boton: {
+      backgroundColor: isDarkMode ? '#03a9f4' : '#7B1FA2',
+      borderRadius: 10,
+    },
+    text: {
+      color: '#0dfc05',
+    },
+});

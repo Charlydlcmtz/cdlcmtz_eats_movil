@@ -2,8 +2,11 @@ import { Input } from '@ui-kitten/components';
 import { MyIcon } from '../ui/MyIcon';
 import { ImageSelector } from '../shared/ImageSelector';
 import { PasswordInput } from '../shared/PasswordInput';
+import { StyleSheet, useColorScheme } from 'react-native';
 
 export const UserForm = ({ form, setForm }: any ) => {
+    const isDarkMode = useColorScheme() === 'dark';
+    const styles = createStyles(isDarkMode);
 
     return (
         <>
@@ -15,28 +18,28 @@ export const UserForm = ({ form, setForm }: any ) => {
             <Input
                 placeholder="Nombre:"
                 accessoryLeft={ <MyIcon name="person-outline" white /> }
-                style={{ marginBottom: 10 }}
+                style={styles.input}
                 value={ form.nombre }
                 onChangeText={ (nombre) => setForm({ ...form, nombre}) }
             />
             <Input
                 placeholder="Username:"
                 accessoryLeft={ <MyIcon name="person-outline" white /> }
-                style={{ marginBottom: 10 }}
+                style={styles.input}
                 value={ form.username }
                 onChangeText={ (username) => setForm({ ...form, username}) }
             />
             <Input
                 placeholder="Apellido Paterno:"
                 accessoryLeft={ <MyIcon name="person-outline" white /> }
-                style={{ marginBottom: 10 }}
+                style={styles.input}
                 value={ form.apellido_paterno }
                 onChangeText={ (apellido_paterno) => setForm({ ...form, apellido_paterno}) }
             />
             <Input
                 placeholder="Apellido Materno:"
                 accessoryLeft={ <MyIcon name="person-outline" white /> }
-                style={{ marginBottom: 10 }}
+                style={styles.input}
                 value={ form.apellido_materno }
                 onChangeText={ (apellido_materno) => setForm({ ...form, apellido_materno}) }
             />
@@ -44,7 +47,7 @@ export const UserForm = ({ form, setForm }: any ) => {
                 placeholder="Teléfono:"
                 keyboardType="phone-pad"
                 accessoryLeft={ <MyIcon name="phone-outline" white /> }
-                style={{ marginBottom: 10 }}
+                style={styles.input}
                 value={ form.telefono }
                 onChangeText={ (telefono) => setForm({ ...form, telefono}) }
             />
@@ -52,7 +55,7 @@ export const UserForm = ({ form, setForm }: any ) => {
                 placeholder="No° Empleado:"
                 keyboardType="number-pad"
                 accessoryLeft={ <MyIcon name="briefcase-outline" white /> }
-                style={{ marginBottom: 10 }}
+                style={styles.input}
                 value={ form.no_empleado }
                 onChangeText={ (no_empleado) => setForm({ ...form, no_empleado}) }
             />
@@ -61,7 +64,7 @@ export const UserForm = ({ form, setForm }: any ) => {
                 keyboardType="email-address"
                 autoCapitalize="none"
                 accessoryLeft={ <MyIcon name="email-outline" white /> }
-                style={{ marginBottom: 10 }}
+                style={styles.input}
                 value={ form.correo }
                 onChangeText={ (correo) => setForm({ ...form, correo}) }
             />
@@ -80,3 +83,13 @@ export const UserForm = ({ form, setForm }: any ) => {
         </>
     );
 };
+
+const createStyles = (isDarkMode: boolean) =>
+    StyleSheet.create({
+      input: {
+        marginBottom: 10,
+        backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF20',
+        borderColor: isDarkMode ? '#555' : '#FFFFFF55',
+        color: isDarkMode ? '#FFFFFF' : '#000000',
+      },
+});

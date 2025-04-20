@@ -1,10 +1,10 @@
 import { isAxiosError } from "axios";
 import { cdlcmtzEatsApi } from "../../config/api/cdlcmtzEatsApi";
-import { Food } from "../../domain/entities/food";
+import { Menu } from "../../domain/entities/food";
 
 
 
-export const updateCreateFood = ( food: Partial<Food> ) => {
+export const updateCreateFood = ( food: Partial<Menu> ) => {
 
     // food.costo = isNaN(Number(food.costo)) ? 0 : Number(food.costo);
 
@@ -13,7 +13,6 @@ export const updateCreateFood = ( food: Partial<Food> ) => {
     }
 
     return createFood( food );
-
 };
 
 const prepareImages = async( images: string ) => {
@@ -45,7 +44,7 @@ const uploadImage = async (image: string) => {
 };
 
 //TODO revisar si viene el usuario
-const updateFood = async (food: Partial<Food>) => {
+const updateFood = async (food: Partial<Menu>) => {
     const { id, img_comida, ... rest } = food;
 
     if (!img_comida) {
@@ -76,18 +75,17 @@ const updateFood = async (food: Partial<Food>) => {
     }
 };
 
-const createFood = async(food: Partial<Food>) => {
+const createFood = async(food: Partial<Menu>) => {
     const { img_comida, ... rest } = food;
 
     try {
-
         if (!img_comida) {
             throw new Error("No se proporcionó ninguna imagen");
         }
 
         const checkedImages = await prepareImages(img_comida);
-
-        const { data } = await cdlcmtzEatsApi.post(`/menu/food-add/`, {
+        console.log(food);
+        const { data } = await cdlcmtzEatsApi.post(`/menu/food-add`, {
             img_comida: checkedImages,
             ... rest,
         });

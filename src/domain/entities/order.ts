@@ -1,14 +1,15 @@
-import { Company } from "./company";
+import { Empresa } from "./company";
 import { Estatus } from "./estatus";
-import { Food } from "./food";
+import { Menu } from "./food";
+
 import { User } from "./user";
 
 export interface Order {
     id: string;
-    food: Food[];
+    food: Menu;
     descripcion: string;
     cantidad: number;
-    empresa: Company;
+    empresa: Empresa;
     usuario: User;
     estatus: Estatus;
   }

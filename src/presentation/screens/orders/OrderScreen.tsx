@@ -7,7 +7,7 @@ import { Order } from "../../../domain/entities/order";
 import { MainLayout } from "../../layouts/MainLayout";
 import * as Yup from 'yup';
 import { Formik } from "formik";
-import { ScrollView, View } from "react-native";
+import { ScrollView, StyleSheet, useColorScheme, View } from "react-native";
 import { MyIcon } from "../../components/ui/MyIcon";
 import { FAB } from "../../components/ui/FAB";
 import { getOrderById } from "../../../actions/orders/get-order-by-id";
@@ -18,9 +18,10 @@ interface Props extends StackScreenProps<RootStackParams, 'OrderScreen'>{}
 
 export const OrderScreen = ({ route }: Props) => {
 
-    const orderIdRef = useRef(route.params.orderId);
-    const theme = useTheme();
-    const queryClient = useQueryClient();
+  const orderIdRef = useRef(route.params.orderId);
+  const queryClient = useQueryClient();
+  const isDarkMode = useColorScheme() === 'dark';
+  const styles = createStyles(isDarkMode);
 
     //useQuery
   const { data: order } = useQuery({
@@ -72,7 +73,7 @@ export const OrderScreen = ({ route }: Props) => {
                       value={ values.estatus.nombre }
                       accessoryLeft={ <MyIcon name="briefcase-outline" white /> }
                       onChangeText={handleChange('nombre')}
-                      style={{ marginVertical: 5 }}
+                      style={styles.input}
                       status={touched.estatus?.nombre && errors.estatus?.nombre ? 'danger' : 'basic'}
                       caption={touched.estatus?.nombre && errors.estatus?.nombre ? errors.estatus?.nombre : ''}
                     />
@@ -92,11 +93,7 @@ export const OrderScreen = ({ route }: Props) => {
                 <FAB
                   iconName="save-outline"
                   onPress={ () => handleSubmit()}
-                  style={{
-                  position: 'absolute',
-                  bottom: 300, // 👈 cambia de 30 a 100
-                  right: 10,
-                  }}
+                  style={styles.fab_boton}
                 />
               </View>
             </MainLayout>
@@ -104,4 +101,20 @@ export const OrderScreen = ({ route }: Props) => {
           }
         </Formik>
   );
-}
+};
+
+const createStyles = (isDarkMode: boolean) =>
+  StyleSheet.create({
+    input: {
+      marginVertical: 5,
+      backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF20',
+      borderColor: isDarkMode ? '#555' : '#FFFFFF55',
+      color: isDarkMode ? '#FFFFFF' : '#000000',
+    },
+    fab_boton: {
+      backgroundColor: isDarkMode ? '#03a9f4' : '#7B1FA2',
+      position: 'absolute',
+      bottom: 150,
+      right: 10,
+    },
+});

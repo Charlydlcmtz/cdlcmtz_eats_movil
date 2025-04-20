@@ -4,7 +4,7 @@ import { TesloTypeMenu } from "../../infraestructure/interfaces/teslo-menu-type.
 import { TesloPivot } from "../../infraestructure/interfaces/teslo-pivot.response";
 
 
-export interface Food {
+export interface Menu {
     id: string;
     platillo: string;
     descripcion: string;
@@ -15,6 +15,7 @@ export interface Food {
     fin_fecha_platillo: Date;
     empresa: TesloCompany;
     tipo_menu: TesloTypeMenu;
+    id_tipo_menu: number;
     estatus: number;
     pivot: TesloPivot;
 }

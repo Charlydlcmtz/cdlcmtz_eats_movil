@@ -1,11 +1,11 @@
 import { cdlcmtzEatsApi } from "../../config/api/cdlcmtzEatsApi"
-import { Company } from "../../domain/entities/company";
+import { Empresa } from "../../domain/entities/company";
 import { TesloCompany } from "../../infraestructure/interfaces/teslo-company.response";
 import { CompanyMapper } from "../../infraestructure/mappers/company.mapper";
 
 
 
-const emptyCompany: Company = {
+const emptyCompany: Empresa = {
     id: '',
     nombre: 'Nuevo Empresa',
     rfc: '',
@@ -18,7 +18,7 @@ const emptyCompany: Company = {
 
 
 
-export const getCompanyById = async (id: string):Promise<Company> => {
+export const getCompanyById = async (id: string):Promise<Empresa> => {
 
     if (id === 'new') return emptyCompany;
 

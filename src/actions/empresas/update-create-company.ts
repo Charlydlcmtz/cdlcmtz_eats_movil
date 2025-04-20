@@ -1,10 +1,10 @@
 import { isAxiosError } from "axios";
 import { cdlcmtzEatsApi } from "../../config/api/cdlcmtzEatsApi";
-import { Company } from "../../domain/entities/company";
+import { Empresa } from "../../domain/entities/company";
 
 
 
-export const updateCreateCompany = ( company: Partial<Company> ) => {
+export const updateCreateCompany = ( company: Partial<Empresa> ) => {
 
     if ( company.id && company.id !== 'new') {
         return updateCompany(company);
@@ -44,7 +44,7 @@ const uploadImage = async (image: string) => {
 }
 
 //TODO revisar si viene la empresa
-const updateCompany = async (company: Partial<Company>) => {
+const updateCompany = async (company: Partial<Empresa>) => {
     const { id, icon, ... rest } = company;
 
     if (!icon) {
@@ -75,7 +75,7 @@ const updateCompany = async (company: Partial<Company>) => {
     }
 };
 
-const createCompany = async(company: Partial<Company>) => {
+const createCompany = async(company: Partial<Empresa>) => {
     const { icon, ... rest } = company;
 
     try {

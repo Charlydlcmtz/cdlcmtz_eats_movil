@@ -1,10 +1,10 @@
 import { cdlcmtzEatsApi } from "../../config/api/cdlcmtzEatsApi"
-import { Food } from "../../domain/entities/food"
+import { Menu } from "../../domain/entities/food"
 import { TesloFood } from "../../infraestructure/interfaces/teslo-food.response"
 import { FoodMapper } from "../../infraestructure/mappers/food.mapper";
 
 
-const emptyFood: Food = {
+const emptyFood: Menu = {
     id: '',
     platillo: 'Nuevo Platillo',
     descripcion: '',
@@ -39,7 +39,7 @@ const emptyFood: Food = {
     },
 };
 
-export const getFoodById = async (id: string):Promise<Food> => {
+export const getFoodById = async (id: string):Promise<Menu> => {
 
     if (id === 'new') return emptyFood;
 

@@ -44,7 +44,6 @@ const createRole = async(role: Partial<Role>) => {
     const { ... rest } = role;
 
     try {
-
         const { data } = await cdlcmtzEatsApi.post(`/roles/role-add`, {
             ... rest,
         });

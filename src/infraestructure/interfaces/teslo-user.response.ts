@@ -14,5 +14,5 @@ export interface TesloUser {
     telefono: string;
     id_empresa: string;
     role: UserRole;
-    estatus: boolean;
-}
+    estatus: number;
+};

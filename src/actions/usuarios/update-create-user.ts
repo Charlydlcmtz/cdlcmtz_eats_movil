@@ -84,7 +84,7 @@ const createUser = async(user: Partial<User>) => {
         }
 
         const checkedImages = await prepareImages(img_user);
-
+        console.log(rest.estatus);
         const { data } = await cdlcmtzEatsApi.post(`usuarios/usuario-add-movil`, {
             img_user: checkedImages,
             ... rest,

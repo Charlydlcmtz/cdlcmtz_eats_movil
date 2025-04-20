@@ -11,7 +11,7 @@ export class OrderMapper {
 
         return {
             id: tesloOrder.id,
-            food: tesloOrder.food,
+            food: tesloOrder.menu,
             descripcion: tesloOrder.descripcion,
             cantidad: tesloOrder.cantidad,
             empresa: tesloOrder.empresa,

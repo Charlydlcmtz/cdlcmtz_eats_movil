@@ -3,25 +3,25 @@ import { User } from "../../../domain/entities/user";
 import { FlatList, Image, RefreshControl, StyleSheet, TouchableOpacity, View } from "react-native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParams } from "../../navigation/StackNavigator";
-import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-
 
 
 interface Props {
   users: User[];
+  onRefresh?: () => void;
 }
 
-export const UserTableList = ({ users }: Props) => {
+export const UserTableList = ({ users, onRefresh }: Props) => {
     const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
-    const queryClient = useQueryClient();
     const [isRefreshing, setIsRefreshing] = useState(false);
 
-    const onPullToRefresh = async() => {
-        setIsRefreshing(true);
-        queryClient.invalidateQueries({ queryKey: ['users', 'infinite'] });
-        setIsRefreshing(false);
+    const onPullToRefresh = async () => {
+      if (!onRefresh) return;
+
+      setIsRefreshing(true);
+      await onRefresh(); // 👈 usamos el refetch pasado desde el padre
+      setIsRefreshing(false);
     };
 
   const renderItem = ({ item }: { item: User }) => (
@@ -84,10 +84,10 @@ export const UserTableList = ({ users }: Props) => {
         renderItem={renderItem}
         contentContainerStyle={{ padding: 10 }}
         refreshControl={
-            <RefreshControl
-                refreshing={ isRefreshing }
-                onRefresh={ onPullToRefresh }
-            />
+          <RefreshControl
+            refreshing={ isRefreshing }
+            onRefresh={ onPullToRefresh }
+          />
         }
     />
   );

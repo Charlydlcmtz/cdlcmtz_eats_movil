@@ -15,10 +15,10 @@ interface Props {
     showMenu?: boolean;    // 👈 para forzar mostrar el botón de menú
 }
 export const MainLayout = ({ 
-    title, 
-    subTitle, 
-    rightAction, 
-    rightActionIcon, 
+    title,
+    subTitle,
+    rightAction,
+    rightActionIcon,
     children,
     showGoBack = false,
     showMenu = false,
@@ -75,7 +75,7 @@ export const MainLayout = ({
       };
 
     return (
-        <Layout style={{ paddingTop: top }}>
+        <Layout style={{ flex: 1, paddingTop: top }}>
             <TopNavigation
                 title={ title }
                 subtitle={ subTitle }
@@ -85,7 +85,7 @@ export const MainLayout = ({
             />
             <Divider />
 
-            <Layout style={{ height: '100%'}}>
+            <Layout style={{ flex: 1, height: '100%'}}>
                 { children }
             </Layout>
 

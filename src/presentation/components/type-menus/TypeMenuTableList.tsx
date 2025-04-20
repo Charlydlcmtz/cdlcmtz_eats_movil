@@ -1,29 +1,31 @@
+import { FlatList, RefreshControl, StyleSheet, TouchableOpacity, View } from "react-native";
+import { TypeMenu } from "../../../domain/entities/type-menu";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { Menu } from "../../../domain/entities/food";
 import { RootStackParams } from "../../navigation/StackNavigator";
-import { Icon, Layout, Text } from "@ui-kitten/components";
-import { FlatList, Image, RefreshControl, StyleSheet, TouchableOpacity, View } from "react-native";
+
 import { useState } from "react";
+import { Icon, Layout, Text } from "@ui-kitten/components";
 
 
 interface Props {
-  foods: Menu[];
+  typeMenus: TypeMenu[];
   onRefresh?: () => void;
 }
 
-export const FoodTableList = ({ foods, onRefresh }: Props) => {
+export const TypeMenuTableList = ({ typeMenus, onRefresh }: Props) => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const onPullToRefresh = async () => {
     if (!onRefresh) return;
+
     setIsRefreshing(true);
     await onRefresh(); // 👈 usamos el refetch pasado desde el padre
     setIsRefreshing(false);
   };
 
-  const renderItem = ({ item }: { item: Menu }) => (
+  const renderItem = ({ item }: { item: TypeMenu }) => (
     <Layout
       style={{
         flexDirection: "row",
@@ -35,29 +37,23 @@ export const FoodTableList = ({ foods, onRefresh }: Props) => {
         elevation: 2,
       }}
     >
-      {/* Imagen */}
-      <Image
-        source={{ uri: item.img_comida }}
-        style={{ width: 60, height: 60, borderRadius: 8, marginRight: 10 }}
-      />
 
       {/* Info del platillo */}
       <View style={{ flex: 1 }}>
         <Text style={[styles.titulo]} numberOfLines={1}>
-          Platillo: {item.platillo}
+          Nombre: {item.nombre}
         </Text>
         <Text style={[styles.descripcion]} numberOfLines={2}>
           Descripción: {item.descripcion}
         </Text>
         <Text style={styles.precio}>
-          Precio: ${Number(item.costo).toFixed(2)} |{" "}
           <Text
             style={{
-              color: item.estatus === 1 ? "#4CAF50" : "#F44336",
+              color: item.estatus === true ? "#4CAF50" : "#F44336",
               fontWeight: "bold",
             }}
           >
-            Estatus: {item.estatus === 1 ? "Disponible" : "No disponible"}
+            Estatus: {item.estatus === true ? "Disponible" : "No disponible"}
           </Text>
         </Text>
       </View>
@@ -65,7 +61,7 @@ export const FoodTableList = ({ foods, onRefresh }: Props) => {
       {/* Botón editar */}
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("FoodScreen", { foodId: item.id })
+          navigation.navigate("TypeMenuScreen", { typeMenuId: item.id })
         }
         style={{ padding: 5 }}
       >
@@ -76,7 +72,7 @@ export const FoodTableList = ({ foods, onRefresh }: Props) => {
 
   return (
     <FlatList
-      data={foods}
+      data={typeMenus}
       keyExtractor={(item) => item.id}
       renderItem={renderItem}
       contentContainerStyle={{ padding: 10 }}

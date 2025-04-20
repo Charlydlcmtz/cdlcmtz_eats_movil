@@ -4,9 +4,6 @@ import { TesloOrder } from "../../infraestructure/interfaces/teslo-order.respons
 import { OrderMapper } from "../../infraestructure/mappers/order.mapper";
 
 
-
-
-
 export const getOders = async ():Promise<Order[]> => {
 
     try {

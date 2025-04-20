@@ -9,7 +9,7 @@ const emptyRole: Role = {
     id: '',
     nombre: 'Nuevo Rol',
     descripcion: '',
-    estatus: true,
+    estatus: 1,
 };
 
 

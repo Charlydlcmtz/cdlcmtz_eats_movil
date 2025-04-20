@@ -11,14 +11,25 @@ export const FoodImage = ({ image }: Props) => {
         <>
             {
                 (image.length === 0)
-                ? <Image source={ require('../../../assets/no-product-image.png') } style={{ width: 400, height: 300, marginHorizontal: 4 }} />
+                ?   <Image source={ require('../../../assets/no-product-image.png') }
+                        style={{
+                            width: '100%',
+                            height: 160,
+                            borderRadius: 20,
+                        }}
+                        resizeMode="cover"
+                    />
                 : (
-                    <FadeInImage 
-                    uri={image}
-                    style={{ width: 400, height: 300, marginHorizontal: 4 }}
+                    <FadeInImage
+                        uri={image}
+                        style={{
+                            width: '100%',
+                            height: 400,
+                            borderRadius: 20,
+                        }}
                     />
                 )
             }
         </>
-    )
+    );
 }

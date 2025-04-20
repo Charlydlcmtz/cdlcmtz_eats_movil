@@ -5,7 +5,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/StackNavigator';
 
 interface Props {
-    food: Food;
+  food: Food;
 }
 
 export const FoodCard = ({ food }: Props) =>  {

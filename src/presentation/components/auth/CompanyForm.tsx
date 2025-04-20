@@ -2,9 +2,12 @@ import { Input } from "@ui-kitten/components"
 import { MyIcon } from "../ui/MyIcon"
 import { ImageSelector } from "../shared/ImageSelector"
 import { PasswordInput } from "../shared/PasswordInput";
+import { StyleSheet, useColorScheme } from "react-native";
 
 
 export const CompanyForm = ({ form, setForm }: any) => {
+    const isDarkMode = useColorScheme() === 'dark';
+    const styles = createStyles(isDarkMode);
 
     return (
         <>
@@ -16,14 +19,14 @@ export const CompanyForm = ({ form, setForm }: any) => {
             <Input
                 placeholder="Empresa:"
                 accessoryLeft={ <MyIcon name="briefcase-outline" white /> }
-                style={{ marginBottom: 10 }}
+                style={styles.input}
                 value={ form.nombre }
                 onChangeText={ (nombre) => setForm({ ...form, nombre}) }
             />
             <Input
                 placeholder="RFC:"
                 accessoryLeft={ <MyIcon name="file-text-outline" white /> }
-                style={{ marginBottom: 10 }}
+                style={styles.input}
                 value={ form.rfc }
                 onChangeText={ (rfc) => setForm({ ...form, rfc}) }
             />
@@ -31,7 +34,7 @@ export const CompanyForm = ({ form, setForm }: any) => {
                 placeholder="Teléfono:"
                 keyboardType="phone-pad"
                 accessoryLeft={ <MyIcon name="phone-outline" white /> }
-                style={{ marginBottom: 10 }}
+                style={styles.input}
                 value={ form.telefono }
                 onChangeText={ (telefono) => setForm({ ...form, telefono}) }
             />
@@ -40,7 +43,7 @@ export const CompanyForm = ({ form, setForm }: any) => {
                 keyboardType="email-address"
                 autoCapitalize="none"
                 accessoryLeft={ <MyIcon name="email-outline" white /> }
-                style={{ marginBottom: 10 }}
+                style={styles.input}
                 value={ form.correo }
                 onChangeText={ (correo) => setForm({ ...form, correo}) }
             />
@@ -48,7 +51,7 @@ export const CompanyForm = ({ form, setForm }: any) => {
             <Input
                 placeholder="Colores"
                 accessoryLeft={ <MyIcon name="color-palette-outline" white /> }
-                style={{ marginBottom: 10 }}
+                style={styles.input}
                 value={ form.colors }
                 onChangeText={ (colors) => setForm({ ...form, colors}) }
             />
@@ -67,3 +70,13 @@ export const CompanyForm = ({ form, setForm }: any) => {
         </>
     );
 };
+
+const createStyles = (isDarkMode: boolean) =>
+    StyleSheet.create({
+      input: {
+        marginBottom: 10,
+        backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF20',
+        borderColor: isDarkMode ? '#555' : '#FFFFFF55',
+        color: isDarkMode ? '#FFFFFF' : '#000000',
+      },
+});

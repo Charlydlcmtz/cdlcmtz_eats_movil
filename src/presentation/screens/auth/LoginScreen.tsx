@@ -1,5 +1,5 @@
 import { Input, Layout, Text, Button } from '@ui-kitten/components';
-import { TouchableOpacity, useWindowDimensions } from 'react-native';
+import { StyleSheet, TouchableOpacity, useColorScheme, useWindowDimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { MyIcon } from '../../components/ui/MyIcon';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -15,6 +15,8 @@ export const LoginScreen = ({ navigation }:Props) => {
     const { login } = useAuthStore();
     const [isPosting, setIsPosting] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const isDarkMode = useColorScheme() === 'dark';
+    const styles = createStyles(isDarkMode);
     const [form, setForm] = useState({
         correo: '',
         password: '',
@@ -67,6 +69,7 @@ export const LoginScreen = ({ navigation }:Props) => {
             value={form.correo}
             onChangeText={(correo) => setForm({ ...form, correo })}
             accessoryLeft={<MyIcon name="email-outline" white />}
+            style={styles.input}
           />
 
           <Input
@@ -77,11 +80,12 @@ export const LoginScreen = ({ navigation }:Props) => {
             onChangeText={(password) => setForm({ ...form, password })}
             accessoryLeft={<MyIcon name="lock-outline" white />}
             accessoryRight={EyeIcon}
+            style={styles.input}
           />
         </Layout>
 
             <Button
-                style={{ marginTop: 30 }}
+                style={styles.boton}
                 disabled={isPosting}
                 onPress={onLogin}
                 accessoryRight={<MyIcon name="arrow-forward-outline" white />}
@@ -98,10 +102,10 @@ export const LoginScreen = ({ navigation }:Props) => {
                     gap: 4,
                 }}
             >
-                <Text status='success' onPress={() => navigation.navigate('RegisterScreen')}>
+                <Text style={styles.text} onPress={() => navigation.navigate('RegisterScreen')}>
                     ¿No tienes cuenta?
                 </Text>
-                <Text status='primary' category='s1' onPress={() => navigation.navigate('ForgotScreen')}>
+                <Text style={styles.text_olvido} category='s1' onPress={() => navigation.navigate('ForgotScreen')}>
                     ¿Olvidaste tu contraseña?
                 </Text>
             </Layout>
@@ -109,3 +113,24 @@ export const LoginScreen = ({ navigation }:Props) => {
        </Layout>
     );
 };
+
+const createStyles = (isDarkMode: boolean) =>
+  StyleSheet.create({
+    input: {
+        marginVertical: 5,
+        backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF20',
+        borderColor: isDarkMode ? '#555' : '#FFFFFF55',
+        color: isDarkMode ? '#FFFFFF' : '#000000',
+    },
+    boton: {
+        marginTop: 30,
+        backgroundColor: isDarkMode ? '#03a9f4' : '#7B1FA2',
+        borderRadius: 10,
+    },
+    text: {
+        color: '#0dfc05',
+    },
+    text_olvido: {
+        color: isDarkMode ? '#031bf4' : '#7B1FA2',
+    },
+});

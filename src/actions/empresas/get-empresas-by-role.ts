@@ -1,5 +1,5 @@
 import { cdlcmtzEatsApi } from "../../config/api/cdlcmtzEatsApi"
-import { Company } from "../../domain/entities/company";
+import { Empresa } from "../../domain/entities/company";
 import { TesloCompany } from '../../infraestructure/interfaces/teslo-company.response';
 import { CompanyMapper } from "../../infraestructure/mappers/company.mapper";
 
@@ -7,7 +7,7 @@ import { CompanyMapper } from "../../infraestructure/mappers/company.mapper";
 
 
 
-export const getCompanys = async ():Promise<Company[]> => {
+export const getCompanys = async ():Promise<Empresa[]> => {
 
     try {
         const { data } = await cdlcmtzEatsApi.post<TesloCompany[]>(`/empresa/list-empresas`);

@@ -1,6 +1,6 @@
 
 
-export interface Company {
+export interface Empresa {
     id: string;
     nombre: string;
     rfc: string;

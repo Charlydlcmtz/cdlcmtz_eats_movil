@@ -13,26 +13,24 @@ import { SideMenuNavigator } from './presentation/routes/SideMenuNavigator';
 import { useAuthStore } from './presentation/store/auth/useAuthStore';
 import { AuthStackNavigator } from './presentation/navigation/AuthStackNavigator';
 import { CartProvider } from './presentation/context/CartContext';
+import { lightTheme } from './presentation/theme/lightTheme';
 
 const queryClient = new QueryClient();
 
 export const FoodApp = () => {
   const { status } = useAuthStore();
   const colorScheme = useColorScheme();
-  const theme = colorScheme === 'dark' ? eva.dark : eva.light;
-  const backgroundColor = (colorScheme === 'dark')
-  ? '#222B45'
-  : '#F7F9FC';
+  const theme = colorScheme === 'dark' ? eva.dark : lightTheme;
 
   const navTheme = {
-    ...(colorScheme === 'dark' ? DarkTheme : DefaultTheme),
+    ...DefaultTheme,
     colors: {
-      ...(colorScheme === 'dark' ? DarkTheme.colors : DefaultTheme.colors),
-      background: backgroundColor,
-      card: backgroundColor,
-      text: '#1A2138',
-      border: '#E4E9F2',
-      primary: '#3366FF',
+      ...DefaultTheme.colors,
+      background: '#03A9F4', // 👈 fondo de toda la navegación
+      card: '#03A9F4',
+      text: '#ffffff',
+      border: '#03A9F4',
+      primary: '#ffffff',
     },
     fonts: {
       regular: { fontFamily: 'System', fontWeight: 'normal' },
